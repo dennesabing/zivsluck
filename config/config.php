@@ -14,6 +14,25 @@
  * @package Zivsluck
  */
 return [
+	'zivsluck' => [
+		'fontmaps' => [
+			'deftone' => [
+				'file' => 'deftonestylus.ttf',
+				'name' => 'Deftone Stylus',
+				'enable' => true
+			],
+			'scriptina' => [
+				'file' => 'scriptina.ttf',
+				'name' => 'Scriptina',
+				'enable' => true
+			],
+			'verdana' => [
+				'file' => 'verdana.ttf',
+				'name' => 'Verdana',
+				'enable' => true
+			],
+		],
+	],
 	'controller' => [
 		'class' => [
 			'create' => [
@@ -23,6 +42,7 @@ return [
 		],
 	],
 	'view' => [
+		'plugins' => [],
 		'templates' => [
 			'front' => [
 				'package' => zivsluck_tag()
@@ -36,6 +56,15 @@ return [
 		],
 	],
 	'routes' => [
+		'index' => [
+			'controller' => [
+				'name' => 'create',
+				'method' => 'index',
+				'enable' => true
+			],
+			'url' => '/',
+			'enable' => true
+		],
 		'zivsluck' => [
 			'view' => [
 				'name' => zivsluck_tag() . '::contents.zivsluck',
@@ -46,7 +75,7 @@ return [
 		],
 		'customize' => [
 			'controller' => [
-				'name' => 'customize',
+				'name' => 'create',
 				'method' => 'index',
 				'enable' => true
 			],
@@ -60,6 +89,15 @@ return [
 				'enable' => true
 			],
 			'url' => '/create/{name?}/{font?}',
+			'enable' => true
+		],
+		'createImage' => [
+			'controller' => [
+				'name' => 'create',
+				'method' => 'createImage',
+				'enable' => true
+			],
+			'url' => '/c/{name?}/{font?}',
 			'enable' => true
 		],
 	]

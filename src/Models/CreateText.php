@@ -27,16 +27,7 @@ class CreateText
 	 * Map of Fonts
 	 * @var array
 	 */
-	protected $fontMaps = [
-		'deftone' => [
-			'file' => 'deftonestylus.ttf',
-			'name' => 'Deftone Stylus'
-		],
-		'scriptina' => [
-			'file' => 'scriptina.ttf',
-			'name' => 'Scriptina'
-		],
-	];
+	protected $fontMaps = null;
 
 	/**
 	 * The Selected font
@@ -56,6 +47,11 @@ class CreateText
 	 */
 	protected $_image = null;
 
+	public function __construct()
+	{
+		$this->fontMaps = zbase_config_get('zivsluck.fontmaps');
+	}
+
 	public function create($text, $font = null)
 	{
 		if(!empty($text))
@@ -69,15 +65,21 @@ class CreateText
 		/**
 		 * <span id="IL_AD8" class="IL_AD">Setup</span> some custom variables for creating our font and image.
 		 */
-		$boxWidth = 500;
+		$boxWidth = 300;
 		$boxHeight = 200;
-		$size = 48; // font size
+		$size = 30; // font size
 		$chars = 30; // prevent really long strings
-		$fontFile = zivsluck()->path() . 'storage/fonts/deftonestylus.ttf'; // the text file to be used
+		$fontFile = zbase_public_path() . '/zbase/assets/zivsluck/fonts/deftonestylus.ttf'; // the text file to be used
+		$verdanaFont = zbase_public_path() . '/zbase/assets/zivsluck/fonts/verdana.ttf'; // the text file to be used
 		$fontDetails = $this->getFontDetails();
-		if(!empty($fontDetails))
+		if(!empty($fontDetails['enable']))
 		{
-			$fontFile = zivsluck()->path() . 'storage/fonts/' . $fontDetails['file'];
+			$fontFile = zbase_public_path() . '/zbase/assets/zivsluck/fonts/' . $fontDetails['file'];
+		}
+		else
+		{
+			$fontFile = $verdanaFont;
+			$text = 'FONT NOT AVAILABLE.';
 		}
 		$color = array(0, 0, 0); // Color[ red, green, blue ]
 		$shade = array(0, 0, 0, 1); // Shadow [ red, green, blue, distance ]
@@ -93,17 +95,26 @@ class CreateText
 		 * Read the TTF file and get the width and height of our font.
 		 */
 		$box = imagettfbbox($size, 0, $fontFile, $text);
-		$width = abs($box[2] - $box[0]) + 4;
-		$height = abs($box[5] - $box[3]) + 10;
+		$width = abs($box[2] - $box[0]) + 50;
+		$height = abs($box[5] - $box[3]) + 100;
 
 		/**
 		 * Create <span id="IL_AD2" class="IL_AD">the blank</span> image, alpha channel and colors.
 		 */
 		//$im = imagecreatetruecolor($width, $height);
-		$im = imagecreatetruecolor($boxWidth, $boxHeight);
-		$alpha = imagesavealpha($im, true);
-		$trans = imagecolorallocatealpha($im, 0, 0, 0, 27);
-		$fill = imagefill($im, 0, 0, $trans);
+		// $im = imagecreatetruecolor($boxWidth, $boxHeight);
+
+		$im = imagecreatefrompng(zivsluck()->path() . 'resources/assets/img/createBaseImage.png');
+//		$stamp = imagecreatefrompng(zivsluck()->path() . 'resources/assets/img/zivsluck.png');
+//		$marge_right = 10;
+//		$marge_bottom = 10;
+//		$sx = imagesx($stamp);
+//		$sy = imagesy($stamp);
+//		imagecopy($im, $stamp, imagesx($im) - $sx - $marge_right, imagesy($im) - $sy - $marge_bottom, 0, 0, imagesx($stamp), imagesy($stamp));
+
+		//$alpha = imagesavealpha($im, true);
+		$trans = imagecolorallocatealpha($im, 0, 0, 0, 127);
+//		$fill = imagefill($im, 0, 0, $trans);
 		$fg = imagecolorallocate($im, $color[0], $color[1], $color[2]);
 		$bg = imagecolorallocate($im, $shade[0], $shade[1], $shade[2]);
 
@@ -111,8 +122,13 @@ class CreateText
 		 * Finally, we add the font and the shadow to our new image.
 		 */
 		$posY = ($boxHeight / 2);
-		$posX = 100;
+		$posX = ($boxWidth / 2) - ($width / 2);
 		imagettftext($im, $size, 0, $posX, $posY, $bg, $fontFile, $text);
+		/**
+		 * Label
+		 */
+		imagettftext($im, 11, 0, 10, 13, $bg, $verdanaFont, 'Font Name: ' . $fontDetails['name']);
+		imagettftext($im, 7, 0, 1, 180, $bg, $verdanaFont, 'Create your necklace at http://zivsluck.com');
 		$this->_image = $im;
 		return $this;
 	}

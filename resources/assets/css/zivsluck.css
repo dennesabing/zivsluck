@@ -1,0 +1,17 @@
+.logo {
+    background-image: url('/zbase/assets/zivsluck/img/zivsluck.png');
+    display: block;
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    text-indent: -99999px;
+}
+
+@media (min-width: 320px) and (max-width: 1000px) {
+	.logo {
+		margin:0px auto;
+	}
+	.createForm{
+		width:100%;text-align: center;
+	}
+}
