@@ -2,6 +2,7 @@
 	"name": "dennesabing/zivsluck",
 	"description": "The ZivsluckZbase NoFramework.",
 	"keywords": ["framework", "laravel","zbase","dennesabing","zivsluck"],
+	"repositories": [ { "type": "composer", "url": "http://claremontdesign.com/repo/" } ],
 	"license": "MIT",
 	"type": "project",
 	"require": {
