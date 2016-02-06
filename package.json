@@ -2,6 +2,7 @@
 	"name": "dennesabing/zivsluck",
 	"description": "Dennesabing Zbase - Zivsluck",
 	"keywords": ["dennesabing", "zivsluck"],
+	"repositories": [ { "type": "composer", "url": "http://claremontdesign.com/repo/" } ],
 	"license": "proprietary",
 	"authors": [
 		{
