@@ -67,22 +67,26 @@ class CreateText
 		 */
 		$boxWidth = 300;
 		$boxHeight = 200;
-		$size = 30; // font size
+		$fontSize = 30; // font size
 		$chars = 30; // prevent really long strings
+		$useTexture = false;
 		$fontFile = zbase_public_path() . '/zbase/assets/zivsluck/fonts/deftonestylus.ttf'; // the text file to be used
 		$verdanaFont = zbase_public_path() . '/zbase/assets/zivsluck/fonts/verdana.ttf'; // the text file to be used
+		$textureFile = zivsluck()->path() . 'resources/assets/img/texture/gold1.png'; // the texture file
 		$fontDetails = $this->getFontDetails();
 		if(!empty($fontDetails['enable']))
 		{
 			$fontFile = zbase_public_path() . '/zbase/assets/zivsluck/fonts/' . $fontDetails['file'];
+			if(!empty($fontDetails['fontsize']))
+			{
+				$fontSize = $fontDetails['fontsize'];
+			}
 		}
 		else
 		{
 			$fontFile = $verdanaFont;
 			$text = 'FONT NOT AVAILABLE.';
 		}
-		$color = array(0, 0, 0); // Color[ red, green, blue ]
-		$shade = array(0, 0, 0, 1); // Shadow [ red, green, blue, distance ]
 		/**
 		 * Get text string that is <span id="IL_AD7" class="IL_AD">passed</span> to this file and clean it up.
 		 */
@@ -94,42 +98,48 @@ class CreateText
 		/**
 		 * Read the TTF file and get the width and height of our font.
 		 */
-		$box = imagettfbbox($size, 0, $fontFile, $text);
+		$box = imagettfbbox($fontSize, 0, $fontFile, $text);
 		$width = abs($box[2] - $box[0]) + 50;
-		$height = abs($box[5] - $box[3]) + 100;
+		// $height = abs($box[5] - $box[3]) + 100;
 
 		/**
 		 * Create <span id="IL_AD2" class="IL_AD">the blank</span> image, alpha channel and colors.
 		 */
-		//$im = imagecreatetruecolor($width, $height);
+		// $im = imagecreatetruecolor($width, $height);
 		// $im = imagecreatetruecolor($boxWidth, $boxHeight);
-
-		$im = imagecreatefrompng(zivsluck()->path() . 'resources/assets/img/createBaseImage.png');
-//		$stamp = imagecreatefrompng(zivsluck()->path() . 'resources/assets/img/zivsluck.png');
-//		$marge_right = 10;
-//		$marge_bottom = 10;
-//		$sx = imagesx($stamp);
-//		$sy = imagesy($stamp);
-//		imagecopy($im, $stamp, imagesx($im) - $sx - $marge_right, imagesy($im) - $sy - $marge_bottom, 0, 0, imagesx($stamp), imagesy($stamp));
-
-		//$alpha = imagesavealpha($im, true);
-		$trans = imagecolorallocatealpha($im, 0, 0, 0, 127);
-//		$fill = imagefill($im, 0, 0, $trans);
-		$fg = imagecolorallocate($im, $color[0], $color[1], $color[2]);
-		$bg = imagecolorallocate($im, $shade[0], $shade[1], $shade[2]);
+		// http://stackoverflow.com/questions/26288347/php-gd-complex-stacking-multiple-layers
+		$clipart = imagecreatefrompng(zivsluck()->path() . 'resources/assets/img/createBaseImage.png');
 
 		/**
-		 * Finally, we add the font and the shadow to our new image.
+		 * Create text on a white background
 		 */
+		// $clipart = imagecreatetruecolor($boxWidth, $boxHeight);
+		$white = imagecolorallocate($clipart, 255, 255, 255);
+		imagefill($clipart, 0, 0, $white);
+		$textColor = imagecolorallocate($clipart, 0, 0, 0);
 		$posY = ($boxHeight / 2);
-		$posX = ($boxWidth / 2) - ($width / 2);
-		imagettftext($im, $size, 0, $posX, $posY, $bg, $fontFile, $text);
+		$posX = ($boxWidth / 2) - ($width / 2) + 25;
+		imagettftext($clipart, $fontSize, 0, $posX, $posY, $textColor, $fontFile, $text);
+		// imagettftext($clipart, $fontSize, 0, $posX + 1, $posY + 1, $textColor, $fontFile, $text);
+
+		$texture = imagecreatefrompng($textureFile);
+		$im = imagecreatetruecolor($boxWidth, $boxHeight);
+		imagecopy($im, $clipart, 0, 0, 0, 0, $boxWidth, $boxHeight);
+		if($useTexture)
+		{
+			imagecolortransparent($im, imagecolorclosest($clipart, 0, 0, 0));
+		}
+
+
+		$img = imagecreatetruecolor($boxWidth, $boxHeight);
+		imagecopymerge($img, $texture, 0, 50, 0, 0, $boxWidth, $boxHeight, 100);
+		imagecopymerge($img, $im, 0, 0, 0, 0, $boxWidth, $boxHeight, 100);
 		/**
 		 * Label
 		 */
-		imagettftext($im, 11, 0, 10, 13, $bg, $verdanaFont, 'Font Name: ' . $fontDetails['name']);
-		imagettftext($im, 7, 0, 1, 180, $bg, $verdanaFont, 'Create your necklace at http://zivsluck.com');
-		$this->_image = $im;
+		imagettftext($img, 11, 0, 20, 23, $textColor, $verdanaFont, 'Font Name: ' . $fontDetails['name']);
+		imagettftext($img, 7, 0, 30, 180, $textColor, $verdanaFont, 'Create your necklace at http://zivsluck.com');
+		$this->_image = $img;
 		return $this;
 	}
 

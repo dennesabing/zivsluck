@@ -24,7 +24,7 @@
 		</div>
 		{!! zbase_view_render_body() !!}
 		 @yield('body_bottom')
-		 <div class="footer" style="text-align: center;width:100%;padding-top:20px;border-top:0px solid #EBEBEB;">
+		 <div class="footer" style="text-align: center;width:100%;padding:20px 0px;border-top:2px solid #EBEBEB;">
 			 &copy; Copyright <?php echo date('Y')?>. All Rights Reserved.
 		 </div>
 	</body>

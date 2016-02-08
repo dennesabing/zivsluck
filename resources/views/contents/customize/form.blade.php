@@ -9,7 +9,7 @@ $fontMaps = zbase_config_get('zivsluck.fontmaps');
 		<form>
 			<h1>Create your own necklace!</h1>
 			<div class="form-group">
-				<label for="name">Name</label>
+				<label for="name">Type the name to view your name on any font</label>
 				<input type="text" required="required" class="form-control" id="name" name="name" placeholder="Type your name">
 			</div>
 			<div class="form-group">
@@ -24,6 +24,9 @@ $fontMaps = zbase_config_get('zivsluck.fontmaps');
 						<?php endforeach; ?>
 					</select>
 				<?php endif; ?>
+			</div>
+			<div>
+				<p>The name preview is only to view how your name looks in the font of the necklace that you have chosen.</p>
 			</div>
 			<button id="btnCustomize" class="btn btn-default">Customize</button>
 		</form>
