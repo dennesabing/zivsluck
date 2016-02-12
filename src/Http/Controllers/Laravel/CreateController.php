@@ -28,15 +28,39 @@ class CreateController extends Controller
 	{
 		$name = str_replace(' ', '', $this->getRouteParameter('name', \Zbase\Models\Data\Column::f('string', 'personfirstname')));
 		$font = $this->getRouteParameter('font', null);
+		$material = $this->getRouteParameter('material', 'stainless');
 		$create = false;
-		return $this->view(zbase_view_file('customize.image'), compact('name', 'font', 'create'));
+		$options = zbase_request_query_inputs();
+		return $this->view(zbase_view_file_contents('customize.image'), compact('name', 'font', 'create', 'material', 'options'));
 	}
 
 	public function createImage()
 	{
 		$name = str_replace(' ', '', $this->getRouteParameter('name', \Zbase\Models\Data\Column::f('string', 'personfirstname')));
 		$font = $this->getRouteParameter('font', null);
+		$material = $this->getRouteParameter('material', 'material');
+		$options = zbase_request_query_inputs();
 		$create = true;
-		return $this->view(zbase_view_file('customize.image'), compact('name', 'font', 'create'));
+		return $this->view(zbase_view_file_contents('customize.image'), compact('name', 'font', 'create', 'material', 'options'));
 	}
+
+	public function order()
+	{
+		$id = $this->getRouteParameter('id', false);
+		$task = $this->getRouteParameter('task', false);
+		if(!empty($id))
+		{
+			$order = zbase_entity('custom_orders')->repository()->byId($id);
+			if(!empty($order))
+			{
+				if($task == 'download')
+				{
+					return $order->download();
+				}
+				return $order->serveImage();
+			}
+		}
+		return $this->notfound('404 Order Not Found.');
+	}
+
 }

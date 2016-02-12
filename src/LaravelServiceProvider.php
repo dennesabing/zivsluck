@@ -1,7 +1,7 @@
 <?php
 
 namespace Zivsluck;
-
+date_default_timezone_set ('Asia/Manila');
 /**
  * Zbase ServiceProvider
  *

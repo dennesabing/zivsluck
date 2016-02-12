@@ -13,6 +13,7 @@
 		  ga('create', 'UA-73403094-1', 'auto');
 		  ga('send', 'pageview');
 		</script>
+		 @yield('head_bottom')
 	</head>
 	<body class="{{ implode(' ',zbase_view_placeholder('body_class')) }}">
 
@@ -25,7 +26,7 @@
 		{!! zbase_view_render_body() !!}
 		 @yield('body_bottom')
 		 <div class="footer" style="text-align: center;width:100%;padding:20px 0px;border-top:2px solid #EBEBEB;">
-			 &copy; Copyright <?php echo date('Y')?>. All Rights Reserved.
+			 &copy; Copyright <?php echo date('Y')?>. All Rights Reserved. Website by <a href="http://claremontdesign.com" target="_blank">ClaremontDesign</a>
 		 </div>
 	</body>
 </html>
