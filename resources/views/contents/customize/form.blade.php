@@ -1,3 +1,6 @@
+<?php
+zbase_view_head_meta_add('_token', zbase_csrf_token());
+?>
 <div class="row">
 	<div class="col-md-12">
 		<a href="/customize" class="logo">ZivsLuck</a>
@@ -9,6 +12,12 @@
 
 		{!! view(zbase_view_file_contents('customize.customize')) !!}
 		{!! view(zbase_view_file_contents('customize.addons')) !!}
+
+		<div class="form-group" id="form-group-ordernotes">
+			<label for="name">Notes on your order</label>
+			<textarea class="form-control" rows="5" id="orderNotes" value="Notes" name="orderNotes" placeholder="Notes on your order"></textarea>
+		</div>
+
 		{!! view(zbase_view_file_contents('customize.shipping')) !!}
 		{!! view(zbase_view_file_contents('customize.confirm')) !!}
 		{!! view(zbase_view_file_contents('customize.final')) !!}
@@ -55,6 +64,9 @@
 	#orderStatus .value{
 		font-weight: bold;
 	}
+	#addonsForm{
+		margin-bottom: 20px;
+	}
 </style>
 @append
 @section('body_bottom')
@@ -79,6 +91,12 @@
 			var addn = jQuery(v);
 			addon += addn.attr('data-name') + '-' + addn.attr('data-position') + '-' + addn.context.width + 'x' + addn.context.height + '|';
 		});
+		if (step >= 3)
+		{
+			jQuery('#form-group-ordernotes').hide();
+		} else {
+			jQuery('#form-group-ordernotes').show();
+		}
 		if (step === 4 || step === 5)
 		{
 			var fName = jQuery('#first_name');
@@ -91,9 +109,11 @@
 			var phone = jQuery('#phone');
 			var fb = jQuery('#fb');
 			var email = jQuery('#email');
+			var orderNotes = jQuery('#orderNotes');
 			data = {
 				addon: addon,
 				chain: chain,
+				customerNote: orderNotes.val(),
 				chainLength: chainLength,
 				first_name: fName.val(),
 				last_name: lName.val(),
@@ -103,7 +123,7 @@
 				address: address.val(),
 				addressb: addressb.val(),
 				phone: phone.val(),
-				fb: fb.val(),
+				fb: fb.val().replace('http://', ''),
 				email: email.val(),
 				step: step
 			};
@@ -117,7 +137,7 @@
 			data = {chain: chain, chainLength: chainLength};
 		}
 		$.ajax({
-			script: true,
+			type: 'POST',
 			url: '<?php echo zbase_url_from_route('create') ?>/' + text + '/' + font + '/' + material,
 			data: data,
 			beforeSend: function () {

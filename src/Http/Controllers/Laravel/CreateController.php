@@ -30,7 +30,7 @@ class CreateController extends Controller
 		$font = $this->getRouteParameter('font', null);
 		$material = $this->getRouteParameter('material', 'stainless');
 		$create = false;
-		$options = zbase_request_query_inputs();
+		$options = zbase_request_inputs();
 		return $this->view(zbase_view_file_contents('customize.image'), compact('name', 'font', 'create', 'material', 'options'));
 	}
 
@@ -39,7 +39,7 @@ class CreateController extends Controller
 		$name = str_replace(' ', '', $this->getRouteParameter('name', \Zbase\Models\Data\Column::f('string', 'personfirstname')));
 		$font = $this->getRouteParameter('font', null);
 		$material = $this->getRouteParameter('material', 'material');
-		$options = zbase_request_query_inputs();
+		$options = zbase_request_inputs();
 		$create = true;
 		return $this->view(zbase_view_file_contents('customize.image'), compact('name', 'font', 'create', 'material', 'options'));
 	}
@@ -56,6 +56,10 @@ class CreateController extends Controller
 				if($task == 'download')
 				{
 					return $order->download();
+				}
+				if($task == 'dealer')
+				{
+					return $order->dealer();
 				}
 				return $order->serveImage();
 			}

@@ -98,6 +98,20 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 	}
 
 	/**
+	 * Serve the Image
+	 */
+	public function dealer()
+	{
+		$options = json_decode($this->details, true);
+		$options['oid'] = $this->maskedId();
+		$options['dealerCopy'] = true;
+		$createModel = new \Zivsluck\Models\CreateText();
+		$createModel->create($this->name(), $this->font, $this->material, $options);
+		$createModel->setOrderData($this);
+		$createModel->serve();
+	}
+
+	/**
 	 * Return the Image Src
 	 * @return string
 	 */
@@ -114,15 +128,28 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 	{
 		$token = zbase_config_get('zivsluck.telegram.bot.token');
 		$shane = zbase_config_get('zivsluck.telegram.shane');
-		$enable = zbase_config_get('zivsluck.telegram.enable', false);
+		$enable = env('ZIVSLUCK_TELEGRAM', zbase_config_get('zivsluck.telegram.enable', false));
 		if($enable)
 		{
-			$folder = zbase_directory_check(zbase_storage_path() . '/zivsluck/orders/', true);
+			$folder = zbase_storage_path() . '/zivsluck/orders/';
+			zbase_directory_check($folder, true);
 			$orderUrl = $this->imageSrc();
-			$image = $folder . $this->id . '.png';
+			$image = $folder . $this->id() . '.png';
 			file_put_contents($image, file_get_contents($orderUrl));
-			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane . '&photo=' . $image;
-			file_get_contents($url);
+			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane;
+			$post_fields = array(
+				'chat_id' => $shane,
+				'photo' => new \CURLFile(realpath($image))
+			);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				"Content-Type:multipart/form-data"
+			));
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+			curl_exec($ch);
 		}
 	}
 

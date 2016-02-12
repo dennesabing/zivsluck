@@ -14,7 +14,7 @@ if(empty($create))
 					$fontName = $fontDetails['name'];
 					echo '<div class="col-md-6 imagePreviews" onclick="zivsluck_selectImage(\'' . $font . '\')" title="Click to choose font: ' . $fontName . '">'
 					. '<img src="' . zbase_url_from_route('createImage', compact('name', 'font', 'material')) . '" alt="' . $fontName . '" data-font="' . $font . '" data-fontname="' . $fontName . '"/>'
-					. '</div>';
+					. zbase_csrf_token_field() . '</div>';
 				}
 			}
 		}
@@ -52,7 +52,9 @@ if(empty($create))
 				{
 					$orderData->sendOrderToShane();
 					$str .= '<br /><button onclick="zivsluck_orderDownload(\'' . $orderData->maskedId() . '\')" class="btn btn-info">Save Order</button>';
+					$str .= '&nbsp;<a href="/customize" class="btn btn-success">Create again!</a>';
 				}
+				$str .= zbase_csrf_token_field();
 				$str .= '</div>';
 				echo $str;
 			}
