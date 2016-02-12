@@ -115,10 +115,10 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 	 * Return the Image Src
 	 * @return string
 	 */
-	public function imageSrc()
+	public function imageSrc($task = null)
 	{
 		$id = $this->maskedId();
-		return zbase_url_from_route('order', compact('id'));
+		return zbase_url_from_route('order', compact('id', 'task'));
 	}
 
 	/**
@@ -134,6 +134,25 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			$folder = zbase_storage_path() . '/zivsluck/orders/';
 			zbase_directory_check($folder, true);
 			$orderUrl = $this->imageSrc();
+			$image = $folder . $this->id() . '.png';
+			file_put_contents($image, file_get_contents($orderUrl));
+			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane;
+			$post_fields = array(
+				'chat_id' => $shane,
+				'photo' => new \CURLFile(realpath($image))
+			);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				"Content-Type:multipart/form-data"
+			));
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+			curl_exec($ch);
+
+			zbase_directory_check($folder, true);
+			$orderUrl = $this->imageSrc('dealer');
 			$image = $folder . $this->id() . '.png';
 			file_put_contents($image, file_get_contents($orderUrl));
 			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane;

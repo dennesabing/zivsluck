@@ -3,7 +3,7 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 ?>
 <div class="row">
 	<div class="col-md-12">
-		<a href="/customize" class="logo">ZivsLuck</a>
+		<a href="/" title="ZivsLuck" class="logo">ZivsLuck</a>
 	</div>
 </div>
 

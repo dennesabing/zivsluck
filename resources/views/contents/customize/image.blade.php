@@ -52,7 +52,7 @@ if(empty($create))
 				{
 					$orderData->sendOrderToShane();
 					$str .= '<br /><button onclick="zivsluck_orderDownload(\'' . $orderData->maskedId() . '\')" class="btn btn-info">Save Order</button>';
-					$str .= '&nbsp;<a href="/customize" class="btn btn-success">Create again!</a>';
+					$str .= '&nbsp;<a href="' . zbase_url_create('customize') . '" class="btn btn-success">Create again!</a>';
 				}
 				$str .= zbase_csrf_token_field();
 				$str .= '</div>';

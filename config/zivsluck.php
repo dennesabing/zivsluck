@@ -105,6 +105,7 @@ return [
 		'default' => [
 			'title' => [
 				'prefix' => '',
+				'separator' => '',
 				'suffix' => 'Personalized Necklace by ZivsLuck'
 			],
 			'description' => 'Create a personalized necklace made from high-quality Stainless, Silver and Gold Plated!',
@@ -148,7 +149,7 @@ return [
 				'method' => 'index',
 				'enable' => true
 			],
-			'url' => '/customize',
+			'url' => '/create',
 			'enable' => true
 		],
 		'create' => [
@@ -157,8 +158,8 @@ return [
 				'method' => 'create',
 				'enable' => true
 			],
-			'httpVerb' => ['get','post'],
-			'url' => '/create/{name?}/{font?}/{material?}',
+			'httpVerb' => ['get', 'post'],
+			'url' => '/c/{name?}/{font?}/{material?}',
 			'enable' => true
 		],
 		'createImage' => [
@@ -167,8 +168,8 @@ return [
 				'method' => 'createImage',
 				'enable' => true
 			],
-			'httpVerb' => ['get','post'],
-			'url' => '/c/{name?}/{font?}/{material?}',
+			'httpVerb' => ['get', 'post'],
+			'url' => '/x/{name?}/{font?}/{material?}',
 			'enable' => true
 		],
 		'order' => [

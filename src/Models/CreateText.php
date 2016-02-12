@@ -308,7 +308,7 @@ class CreateText
 				imagettftext($img, 9, 0, 25, 280, $textColorBlack, $verdanaFont, 'Chain Length: ' . $chainLength . '"');
 				if(!empty($customerNote))
 				{
-					imagettftext($img, 9, 0, 15, 300, $textColorBlack, $verdanaFont, 'Customer Note:');
+					imagettftext($img, 9, 0, 25, 300, $textColorBlack, $verdanaFont, 'Customer Note:');
 					imagettftext($img, 8, 0, 25, 320, $textColorBlack, $verdanaFont, wordwrap($customerNote, 40));
 				}
 			}
