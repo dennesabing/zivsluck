@@ -171,6 +171,7 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			$post_fields = array(
 				'chat_id' => $shane,
 				'photo' => new \CURLFile(realpath($image)),
+				'caption' => 'Dealer\'s copy for Order from ' . $this->name . ' with Order ID: ' . $this->maskedId()
 			);
 
 			$ch = curl_init();
@@ -184,6 +185,11 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 		}
 	}
 
+	public function paymentMerchant()
+	{
+		return zbase_config_get('zivsluck.paymentCenters.' . $this->paymentMerchant . '.name');
+	}
+
 	/**
 	 * Send Order pHoto to Shane
 	 */
@@ -195,12 +201,12 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 		if($enable)
 		{
 			$folder = zbase_storage_path() . '/zivsluck/order/receipts/';
-			$image = $folder . $this->id() . '.jpg';
+			$image = $folder . $this->id() . '.png';
 			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane;
 			$post_fields = array(
 				'chat_id' => $shane,
 				'photo' => new \CURLFile(realpath($image)),
-				'caption' => 'Payment received from ' . $this->name . ' for Order ID ' . $this->maskedId()
+				'caption' => 'Payment received from ' . $this->name . ' via '.$this->paymentMerchant().' for Order ID ' . $this->maskedId()
 			);
 
 			$ch = curl_init();

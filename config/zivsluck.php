@@ -15,6 +15,9 @@
  */
 return [
 	'zivsluck' => [
+		'checkout' => [
+			'enable' => env('ZIVSLUCK_CHECKOUT', false),
+		],
 		'socialmedia' => [
 			'facebook' => [
 				'account' => '',

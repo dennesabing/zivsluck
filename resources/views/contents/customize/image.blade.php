@@ -1,5 +1,5 @@
 <?php
-
+$checkout = zbase_config_get('zivsluck.checkout.enable', false);
 if(empty($create))
 {
 	if(!empty($font))
@@ -27,7 +27,7 @@ if(empty($create))
 			{
 				if(!empty($options['step']))
 				{
-					if($options['step'] == 5)
+					if($options['step'] == 5 && !empty($checkout))
 					{
 						$dataOptions = $options;
 						unset($dataOptions['step']);

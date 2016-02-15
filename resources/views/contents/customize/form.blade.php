@@ -1,5 +1,6 @@
 <?php
 zbase_view_head_meta_add('_token', zbase_csrf_token());
+$checkout = zbase_config_get('zivsluck.checkout.enable', false);
 ?>
 <div class="row" style="border-bottom: 2px solid #EBEBEB;padding-bottom:20px;">
 	<div class="col-md-6">
@@ -70,6 +71,12 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 		}
 	}
 </style>
+<script type="text/javascript">
+	var zivsluckFonts = <?php echo json_encode(zbase_config_get('zivsluck.fontmaps')); ?>;
+	var zivsluckChains = <?php echo json_encode(zbase_config_get('zivsluck.chains')); ?>;
+	var zivsluckAddOnsToFonts = <?php echo json_encode(zbase_config_get('zivsluck.addons.configuration.fonts')); ?>;
+	var addon = '';
+</script>
 @append
 @section('body_bottom')
 <script type="text/javascript">
@@ -90,10 +97,6 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 		}
 		return '';
 	}
-
-	var zivsluckFonts = <?php echo json_encode(zbase_config_get('zivsluck.fontmaps')); ?>;
-	var zivsluckChains = <?php echo json_encode(zbase_config_get('zivsluck.chains')); ?>;
-	var addon = '';
 	function zivsluck_shutdown_ordering(tag)
 	{
 		if (tag == 'fontToMaterial')
@@ -219,18 +222,23 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 				if (step === 2 && font != 'all')
 				{
 					var htmlButtons = '<button onclick="zivsluck_addOnsBack();" id="btnAddOnsBack" class="btn btn-default">Back</button>';
+					<?php if(!empty($checkout)):?>
 					htmlButtons += '<br /><br /><br /><button onclick="zivsluck_shippingProcess();" id="btnCheckoutNecklace" class="btn btn-success btn-next">Checkout this Necklace</button>';
+					<?php endif;?>
 					jQuery('#submitButtons').html(htmlButtons);
 				}
 				if (step === 4 && font != 'all')
 				{
+					<?php if(!empty($checkout)):?>
 					var htmlButtons = '<div id="orderConfirmationWrapper"><div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I Agree and I understand the Terms and Conditions.</label></div>';
 					htmlButtons += '<br /><button onclick="zivsluck_confirmOrderCancel();" id="btnConfirmOrderCancel" class="btn btn-danger">Cancel Order</button>';
 					htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success btn-next">Yes, I want to order</button></div>';
 					jQuery('#submitButtons').html(htmlButtons);
+					<?php endif;?>
 				}
 				if (step === 5 && font != 'all')
 				{
+					<?php if(!empty($checkout)):?>
 					jQuery('#shippingForm').remove();
 					jQuery('#customizeForm').remove();
 					jQuery('#confirmOrderForm').remove();
@@ -254,6 +262,7 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 					window.onbeforeunload = null;
 					scroll(0, 0);
 					jQuery('#orderConfirmationWrapper').remove();
+					<?php endif;?>
 				}
 				if (step === 1 && font != 'all')
 				{

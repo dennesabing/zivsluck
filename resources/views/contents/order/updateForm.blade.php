@@ -24,7 +24,7 @@
 				<?php echo zbase_csrf_token_field() ?>
 				<div class="form-group">
 					<label for="order_id">Order ID</label>
-					<input type="text" required="required" minlength="1" maxlength="4" class="form-control" id="order_id" value="<?php echo zbase_form_old('order_id', zbase_is_dev() ? '2' : null) ?>" name="order_id" placeholder="Order ID" />
+					<input type="text" required="required" minlength="6" maxlength="7" class="form-control" id="order_id" value="<?php echo zbase_form_old('order_id', zbase_is_dev() ? '2' : null) ?>" name="order_id" placeholder="Order ID" />
 				</div>
 				<div class="form-group">
 					<label for="name">Name on your order</label>

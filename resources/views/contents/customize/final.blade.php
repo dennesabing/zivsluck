@@ -1,3 +1,7 @@
+<?php
+$checkout = zbase_config_get('zivsluck.checkout.enable', false);
+?>
+<?php if(!empty($checkout)):?>
 <div id="finalOrderForm" style="display: none;">
 	<h1>Thank you very much!</h1>
 	<p>Save the <strong>ORDER image</strong> below for your reference, or <a id="orderImageDownload" href="javascript:void(0)" title="Download order image">click here</a> to download it automatically.</p>
@@ -16,3 +20,4 @@
 		{!! view(zbase_view_file_contents('sharethis')) !!}
 	</div>
 </div>
+<?php endif;?>

@@ -25,6 +25,9 @@ return [
 					'width' => 290,
 					'height' => 100
 				],
+				'fonts' => [
+					'scriptina' => ['heart']
+				],
 			],
 			'heart' => [
 				'name' => 'Heart',

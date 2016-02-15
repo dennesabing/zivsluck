@@ -1,4 +1,5 @@
 <?php
+$checkout = zbase_config_get('zivsluck.checkout.enable', false);
 $dataShipping = [];
 if(zbase_is_dev())
 {
@@ -14,6 +15,7 @@ if(zbase_is_dev())
 	];
 }
 ?>
+<?php if(!empty($checkout)):?>
 <div id="shippingForm" style="display: none;">
 	<h1>Order Information</h1>
 	<div class="form-group">
@@ -240,3 +242,4 @@ if(zbase_is_dev())
 	});
 </script>
 @append
+<?php endif;?>

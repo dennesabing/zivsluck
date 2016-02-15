@@ -145,12 +145,7 @@ class CreateText
 				$options['shippingLastName'] = $options['last_name'];
 			}
 		}
-		if(!empty($dealerCopy))
-		{
-			$boxWidth = 280;
-			$boxHeight = 500;
-			$brandingHeightPosition = 500;
-		}
+		$customerNote = !empty($options['customerNote']) ? $options['customerNote'] : '';
 
 		$orderData = $this->getOrderData();
 		$statusNew = false;
@@ -205,7 +200,20 @@ class CreateText
 		$logo = zivsluck()->path() . 'resources/assets/img/texture/logo.png'; // the texture file
 		$paymentDetails = zivsluck()->path() . 'resources/assets/img/payments/bayadCenter.png'; // the texture file
 		$fontDetails = $this->getFontDetails();
-		$customerNote = !empty($options['customerNote']) ? $options['customerNote'] : '';
+
+		if(!empty($dealerCopy))
+		{
+			$boxWidth = 280;
+			$boxHeight = 350;
+			$brandingHeightPosition = 350;
+			$posYDiff = -75;
+			if(!empty($customerNote))
+			{
+				$boxHeight = 500;
+				$brandingHeightPosition = 500;
+				$posYDiff = 0;
+			}
+		}
 
 		/**
 		 * Get text string that is <span id="IL_AD7" class="IL_AD">passed</span> to this file and clean it up.
@@ -455,7 +463,7 @@ class CreateText
 				{
 					imagettftext($img, 9, 0, 15, 555, $textColorBlack, $verdanaFont, 'PAID ' . number_format($paymentAmount, 2) . ' via ' . $paymentCenterName . ' (' . $orderData->paid_date_at->format('m/d/Y') . ')');
 				}
-				if(!empty($orderData) && $orderData->status == 1 && !empty($options['step']) && $options['step']== 5)
+				if(!empty($orderData) && $orderData->status == 1 && !empty($options['step']) && $options['step'] == 5)
 				{
 					$orderData->total = $total;
 					$orderData->subtotal = $subTotal;
@@ -482,7 +490,7 @@ class CreateText
 			$paymentDetailsIm = imagecreatefrompng($paymentDetails);
 			imagecopy($img, $paymentDetailsIm, 0, 800, 0, 0, $boxWidth, $boxHeight);
 		}
-		if(!empty($statusPaid))
+		if(!empty($statusPaid) && empty($dealerCopy))
 		{
 			if(!empty($paymentDetailsIm))
 			{

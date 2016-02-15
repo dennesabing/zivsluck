@@ -1,3 +1,7 @@
+<?php
+$checkout = zbase_config_get('zivsluck.checkout.enable', false);
+?>
+<?php if(!empty($checkout)):?>
 <div id="confirmOrderForm" style="display: none;">
 	<h1>Please confirm your order below.</h1>
 	<div class="col-md-12">
@@ -68,3 +72,4 @@
 	});
 </script>
 @append
+<?php endif;?>
