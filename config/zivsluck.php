@@ -120,7 +120,7 @@ return [
 		'default' => [
 			'title' => [
 				'prefix' => '',
-				'separator' => ' - ',
+				'separator' => ' ',
 				'suffix' => 'Personalized Necklace by ZivsLuck'
 			],
 			'description' => 'Create a personalized necklace made from high-quality Stainless, Silver and Gold Plated!',
@@ -145,7 +145,7 @@ return [
 			'controller' => [
 				'name' => 'maintenance',
 				'method' => 'index',
-				'enable' => true
+				'enable' => false
 			],
 			'url' => '/maintenance',
 			'enable' => true
