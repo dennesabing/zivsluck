@@ -21,6 +21,12 @@ use Zbase\Interfaces;
 class Order extends BaseEntity implements Interfaces\IdInterface
 {
 
+	const STATUS_NEW = 1;
+	const STATUS_PAID = 2;
+	const STATUS_PROCESSING = 3;
+	const STATUS_SHIPPED = 4;
+	const STATUS_COMPLETE = 5;
+
 	/**
 	 * Entity name as described in the config
 	 * @var string
@@ -80,6 +86,7 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 		$options = json_decode($this->details, true);
 		$options['oid'] = $this->maskedId();
 		$createModel = new \Zivsluck\Models\CreateText();
+		$createModel->setOrderData($this);
 		$createModel->create($this->name(), $this->font, $this->material, $options);
 		$createModel->serve();
 	}
@@ -91,9 +98,10 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 	{
 		$options = json_decode($this->details, true);
 		$options['oid'] = $this->maskedId();
+		$options['download'] = true;
 		$createModel = new \Zivsluck\Models\CreateText();
-		$createModel->create($this->name(), $this->font, $this->material, $options);
 		$createModel->setOrderData($this);
+		$createModel->create($this->name(), $this->font, $this->material, $options);
 		$createModel->download();
 	}
 
@@ -131,7 +139,7 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 		$enable = env('ZIVSLUCK_TELEGRAM', zbase_config_get('zivsluck.telegram.enable', false));
 		if($enable)
 		{
-			$folder = zbase_storage_path() . '/zivsluck/orders/';
+			$folder = zbase_storage_path() . '/zivsluck/var/';
 			zbase_directory_check($folder, true);
 			$orderUrl = $this->imageSrc();
 			$image = $folder . $this->id() . '.png';
@@ -139,7 +147,8 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane;
 			$post_fields = array(
 				'chat_id' => $shane,
-				'photo' => new \CURLFile(realpath($image))
+				'photo' => new \CURLFile(realpath($image)),
+				'caption' => 'New Order from ' . $this->name . ' with Order ID: ' . $this->maskedId()
 			);
 
 			$ch = curl_init();
@@ -151,6 +160,9 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
 			curl_exec($ch);
 
+			/**
+			 * Send the dealer Image
+			 */
 			zbase_directory_check($folder, true);
 			$orderUrl = $this->imageSrc('dealer');
 			$image = $folder . $this->id() . '.png';
@@ -158,7 +170,37 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane;
 			$post_fields = array(
 				'chat_id' => $shane,
-				'photo' => new \CURLFile(realpath($image))
+				'photo' => new \CURLFile(realpath($image)),
+			);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				"Content-Type:multipart/form-data"
+			));
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+			curl_exec($ch);
+		}
+	}
+
+	/**
+	 * Send Order pHoto to Shane
+	 */
+	public function sendPaymentReceiptToShane()
+	{
+		$token = zbase_config_get('zivsluck.telegram.bot.token');
+		$shane = zbase_config_get('zivsluck.telegram.shane');
+		$enable = env('ZIVSLUCK_TELEGRAM', zbase_config_get('zivsluck.telegram.enable', false));
+		if($enable)
+		{
+			$folder = zbase_storage_path() . '/zivsluck/order/receipts/';
+			$image = $folder . $this->id() . '.jpg';
+			$url = 'https://api.telegram.org/bot' . $token . '/sendPhoto?chat_id=' . $shane;
+			$post_fields = array(
+				'chat_id' => $shane,
+				'photo' => new \CURLFile(realpath($image)),
+				'caption' => 'Payment received from ' . $this->name . ' for Order ID ' . $this->maskedId()
 			);
 
 			$ch = curl_init();

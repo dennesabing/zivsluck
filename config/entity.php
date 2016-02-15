@@ -159,6 +159,54 @@ return [
 						'length' => 64,
 						'comment' => 'Email Address'
 					],
+					'total' => [
+						'filterable' => [
+							'name' => 'total',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'total',
+							'enable' => true
+						],
+						'label' => 'Total',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'decimal',
+						'length' => 16,
+						'comment' => 'Total Amount'
+					],
+					'subtotal' => [
+						'filterable' => [
+							'name' => 'total',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'total',
+							'enable' => true
+						],
+						'label' => 'Sub Total',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'decimal',
+						'length' => 16,
+						'comment' => 'Sub Total Amount'
+					],
+					'shipping_fee' => [
+						'filterable' => [
+							'name' => 'shippingfee',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'shippingfee',
+							'enable' => true
+						],
+						'label' => 'Shipping Fee',
+						'hidden' => false,
+						'fillable' => true,
+						'length' => 16,
+						'type' => 'decimal',
+						'comment' => 'Shipping Fee'
+					],
 					'details' => [
 						'filterable' => [
 							'name' => 'details',
@@ -173,6 +221,81 @@ return [
 						'fillable' => true,
 						'type' => 'text',
 						'comment' => 'The order details'
+					],
+					'payment_merchant' => [
+						'filterable' => [
+							'name' => 'paymentmerchant',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'paymentmerchant',
+							'enable' => true
+						],
+						'label' => 'Paid at',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'string',
+						'comment' => 'Payment Center'
+					],
+					'payment_tracking_number' => [
+						'filterable' => [
+							'name' => 'paymenttrackingnumber',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'paymenttrackingnumber',
+							'enable' => true
+						],
+						'label' => 'Tracking Number',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'string',
+						'comment' => 'Payment Tracking Number'
+					],
+					'paid_date_at' => [
+						'filterable' => [
+							'name' => 'paiddateat',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'paiddateat',
+							'enable' => true
+						],
+						'label' => 'Date Paid',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'timestamp',
+						'comment' => 'Date Paid'
+					],
+					'shipping_tracking_number' => [
+						'filterable' => [
+							'name' => 'shippingtrackingnumber',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'shippingtrackingnumber',
+							'enable' => true
+						],
+						'label' => 'Shipping Tracking',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'string',
+						'comment' => 'Shipping Tracking Number'
+					],
+					'shipping_date_at' => [
+						'filterable' => [
+							'name' => 'shippingdateat',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'shippingdateat',
+							'enable' => true
+						],
+						'label' => 'Date Shipped',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'timestamp',
+						'comment' => 'Date Shipped'
 					],
 				]
 			]

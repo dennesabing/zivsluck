@@ -68,6 +68,15 @@ class CreateText
 		{
 			$this->setFont($font);
 		}
+		if(!$this->orderData instanceof \Zivsluck\Entity\Laravel\Order && !empty($options['oid']))
+		{
+			$orderData = zbase_entity('custom_orders')->repository()->byId($options['oid']);
+			if(empty($orderData))
+			{
+				return zbase_abort(404);
+			}
+			$this->setOrderData($orderData);
+		}
 		$dealerCopy = !empty($options['dealerCopy']) ? true : false;
 		/**
 		 * <span id="IL_AD8" class="IL_AD">Setup</span> some custom variables for creating our font and image.
@@ -78,14 +87,26 @@ class CreateText
 		$pricePerLetter = 20;
 		$boxWidth = 280;
 		$boxHeight = 200;
+		$brandingHeightPosition = 200;
 		$borderWidth = 10;
 		$hasBorder = !empty($dealerCopy) ? true : false;
 		$hasDetails = false;
+		$fontsNotForMaterial = zbase_config_get('zivsluck.chains.' . $material . '.fonts.not', []);
+		$fontNotForMaterial = false;
+		$posYDiff = 0;
+		if(!empty($fontsNotForMaterial))
+		{
+			if(in_array($font, $fontsNotForMaterial))
+			{
+				$fontNotForMaterial = true;
+			}
+		}
 		if(!empty($chain) && !empty($chainLength))
 		{
 			$hasDetails = true;
 			$boxWidth = 280;
 			$boxHeight = 600;
+			$brandingHeightPosition = 600;
 			$chainFile = zbase_config_get('zivsluck.chains.' . strtolower($material) . '.' . strtolower($chain) . '.file', false);
 			$chainImage = zbase_public_path() . '/zbase/assets/zivsluck/img/chain/' . $chainFile;
 		}
@@ -103,18 +124,62 @@ class CreateText
 				$deliveryMode = !empty($options['deliveryMode']) ? $options['deliveryMode'] : false;
 				$hasShipping = true;
 				$courierName = $courier['name'];
-				$shippingFee = $courier['fee'];
-				$courierText = $courierName . ' - ' . ($deliveryMode == 'doortodoor' ? 'Door-to-Door' : 'PickUp');
+				if($deliveryMode == 'meetup')
+				{
+					$courierText = 'Meet Up';
+					$shippingFee = 0.00;
+				}
+				else
+				{
+					$shippingFee = $courier['fee'];
+					$courierText = $courierName . ' - ' . ($deliveryMode == 'doortodoor' ? 'Door-to-Door' : 'PickUp');
+				}
 
 				$boxWidth = 280;
 				$boxHeight = 800;
+				$brandingHeightPosition = 800;
+			}
+			if(empty($options['shippingSame']))
+			{
+				$options['shippingFirstName'] = $options['first_name'];
+				$options['shippingLastName'] = $options['last_name'];
 			}
 		}
 		if(!empty($dealerCopy))
 		{
 			$boxWidth = 280;
 			$boxHeight = 500;
+			$brandingHeightPosition = 500;
 		}
+
+		$orderData = $this->getOrderData();
+		$statusNew = false;
+		$statusPaid = false;
+		if(!empty($orderData))
+		{
+			$statusPaid = $orderData->status == 2;
+			if(!empty($options['download']) && $orderData->status == 1)
+			{
+				$boxWidth = 280;
+				$boxHeight = 800 + 380;
+				$posYDiff = 190;
+				$brandingHeightPosition = 800;
+				$statusNew = true;
+			}
+			if(!empty($statusPaid))
+			{
+				$paymentCenterName = zbase_config_get('zivsluck.paymentCenters.' . $orderData->payment_merchant . '.shortName');
+				$paymentAmount = $orderData->total;
+				if(file_exists(zbase_storage_path() . '/zivsluck/order/receipts/' . $orderData->maskedId() . '.png'))
+				{
+					$paymentDetailsIm = imagecreatefrompng(zbase_storage_path() . '/zivsluck/order/receipts/' . $orderData->maskedId() . '.png');
+					$boxHeight = $boxHeight + imagesy($paymentDetailsIm);
+					$posYDiff = imagesy($paymentDetailsIm) / 2;
+					$brandingHeightPosition = 800;
+				}
+			}
+		}
+
 		$price = zbase_config_get('zivsluck.fontmaps.' . $font . '.material.' . $material . '.price', false);
 		if(empty($price))
 		{
@@ -131,14 +196,25 @@ class CreateText
 				$price = 700;
 			}
 		}
+
 		$fontSize = 30; // font size
-		$chars = 30; // prevent really long strings
+		$chars = 30;
 		$fontFile = zbase_public_path() . '/zbase/assets/zivsluck/fonts/deftonestylus.ttf'; // the text file to be used
 		$verdanaFont = zbase_public_path() . '/zbase/assets/zivsluck/fonts/verdana.ttf'; // the text file to be used
 		$textureFile = zivsluck()->path() . 'resources/assets/img/texture/' . strtolower($material) . '.png'; // the texture file
 		$logo = zivsluck()->path() . 'resources/assets/img/texture/logo.png'; // the texture file
+		$paymentDetails = zivsluck()->path() . 'resources/assets/img/payments/bayadCenter.png'; // the texture file
 		$fontDetails = $this->getFontDetails();
 		$customerNote = !empty($options['customerNote']) ? $options['customerNote'] : '';
+
+		/**
+		 * Get text string that is <span id="IL_AD7" class="IL_AD">passed</span> to this file and clean it up.
+		 */
+		$text = $this->getText();
+		$text = trim(strip_tags(html_entity_decode($text)));
+		$text = trim(preg_replace('/ss+/', ' ', $text));
+		$text = ( strlen($text) > $chars ) ? substr($text, 0, $chars) . '..' : $text;
+
 		if(!empty($fontDetails['enable']))
 		{
 			$fontFile = zbase_public_path() . '/zbase/assets/zivsluck/fonts/' . $fontDetails['file'];
@@ -152,14 +228,16 @@ class CreateText
 			$fontFile = $verdanaFont;
 			$text = 'FONT NOT AVAILABLE.';
 		}
-		/**
-		 * Get text string that is <span id="IL_AD7" class="IL_AD">passed</span> to this file and clean it up.
-		 */
-		$text = $this->getText();
-		$text = trim(strip_tags(html_entity_decode($text)));
-		$text = trim(preg_replace('/ss+/', ' ', $text));
-		$text = ( strlen($text) > $chars ) ? substr($text, 0, $chars) . '..' : $text;
-
+		if($fontNotForMaterial)
+		{
+			$fontFile = $verdanaFont;
+			$fontSize = 14; // font size
+			$text = wordwrap("ERROR: \nFONT NOT FOR " . strtoupper($material) . ". \nSelect another font.", 20);
+			$hasDetails = false;
+			$boxWidth = 280;
+			$boxHeight = 200;
+			$brandingHeightPosition = 200;
+		}
 
 		/**
 		 * Read the TTF file and get the width and height of our font.
@@ -187,28 +265,38 @@ class CreateText
 		imagefill($bgTexture, 0, 0, $white);
 		$textColorBlack = imagecolorallocate($bgTexture, 0, 0, 0);
 
-		if($hasDetails)
+		if(empty($posY))
 		{
-			if($hasShipping)
+			if($hasDetails)
 			{
-				$posY = ($boxHeight / 2) + 10 - 300;
+				if($hasShipping)
+				{
+					$posY = ($boxHeight / 2) + 10 - 300 - $posYDiff;
+				}
+				else
+				{
+					$posY = ($boxHeight / 2) + 10 - 200 - $posYDiff;
+				}
 			}
 			else
 			{
-				$posY = ($boxHeight / 2) + 10 - 200;
+				$posY = ($boxHeight / 2) + 10 - $posYDiff;
 			}
+			$posX = ($boxWidth / 2) - ($width / 2) + 10;
+			if(!empty($hasBorder))
+			{
+				$posY = ($boxHeight / 2) + 10 - 150 - $borderWidth - $posYDiff;
+				$posX = ($boxWidth / 2) - ($width / 2);
+			}
+		}
+		if($fontNotForMaterial)
+		{
+			imagettftext($bgTexture, $fontSize, 0, $posX, 60, $textColorBlack, $fontFile, $text);
 		}
 		else
 		{
-			$posY = ($boxHeight / 2) + 10;
+			imagettftext($bgTexture, $fontSize, 0, $posX, $posY, $textColorBlack, $fontFile, $text);
 		}
-		$posX = ($boxWidth / 2) - ($width / 2) + 10;
-		if(!empty($hasBorder))
-		{
-			$posY = ($boxHeight / 2) + 10 - 150 - $borderWidth;
-			$posX = ($boxWidth / 2) - ($width / 2);
-		}
-		imagettftext($bgTexture, $fontSize, 0, $posX, $posY, $textColorBlack, $fontFile, $text);
 
 		$im = imagecreatetruecolor($boxWidth, $boxHeight);
 		if(!empty($dealerCopy))
@@ -224,11 +312,11 @@ class CreateText
 		imagecopymerge($img, $im, 0, 0, 0, 0, $boxWidth, $boxHeight, 100);
 		if($hasBorder)
 		{
-			imagecopy($img, $logo, 234, $boxHeight - 45, 0, 0, imagesx($logo), imagesy($logo));
+			imagecopy($img, $logo, 234, $brandingHeightPosition - 45, 0, 0, imagesx($logo), imagesy($logo));
 		}
 		else
 		{
-			imagecopy($img, $logo, 245, $boxHeight - 35, 0, 0, $boxWidth, $boxHeight);
+			imagecopy($img, $logo, 245, $brandingHeightPosition - 35, 0, 0, $boxWidth, $boxHeight);
 		}
 
 		if(!empty($dealerCopy))
@@ -257,13 +345,25 @@ class CreateText
 					$addonSize = !empty($addon[2]) ? explode('x', $addon[2]) : false;
 					if(!empty($addonEnabled) && file_exists($addonFile))
 					{
+						$addonFile = imagecreatefrompng($addonFile);
+						if(empty($addonSize[0]))
+						{
+							$addonSize[0] = imagesx($addonFile);
+						}
+						if(empty($addonSize[1]))
+						{
+							$addonSize[1] = imagesy($addonFile);
+						}
+						$addonNewImage = imagecreatetruecolor($addonSize[0], $addonSize[1]);
+						imagealphablending($addonNewImage, false);
+						imagecopyresized($addonNewImage, $addonFile, 0, 0, 0, 0, $addonSize[0], $addonSize[1], imagesx($addonFile), imagesy($addonFile));
 						$totalAddon++;
-						imagecopy($img, imagecreatefrompng($addonFile), $addonPosition[0] + $addonDroppableLeft, $addonPosition[1] + $addonDroppableTop, 0, 0, $addonSize[0], $addonSize[1]);
+						imagecopy($img, $addonNewImage, $addonPosition[0] + $addonDroppableLeft, $addonPosition[1] + $addonDroppableTop, 0, 0, $addonSize[0], $addonSize[1]);
 					}
 				}
 			}
 		}
-
+//		die;
 		/**
 		 * Label
 		 */
@@ -273,6 +373,7 @@ class CreateText
 			{
 				$chainImage = imagecreatefrompng($chainImage);
 				$total = $price;
+				$subTotal = $price;
 				$letterCount = strlen($text);
 				$addonPrice = 0;
 				if($letterCount < $maxLetter)
@@ -282,6 +383,7 @@ class CreateText
 						$addonCount = ($letterCount + $totalAddon) - $maxLetter;
 						$addonPrice = $addonCount * 20;
 						$total += $addonPrice;
+						$subTotal += $addonPrice;
 					}
 				}
 				if($letterCount > $maxLetter)
@@ -290,11 +392,12 @@ class CreateText
 					$total += $letterPrice;
 					$addonPrice = $totalAddon * 20;
 					$total += $addonPrice;
+					$subTotal += $addonPrice;
 				}
 				$total += $shippingFee;
-				if(!empty($options['oid']))
+				if(!empty($orderData))
 				{
-					imagettftext($img, 12, 0, 15, 180, $textColorBlack, $verdanaFont, 'ORDER ID: ' . $options['oid']);
+					imagettftext($img, 12, 0, 15, 180, $textColorBlack, $verdanaFont, 'ORDER ID: ' . $orderData->maskedId());
 				}
 				imagecopy($img, $chainImage, 15, 295, 0, 0, imagesx($chainImage), imagesy($chainImage));
 			}
@@ -329,11 +432,12 @@ class CreateText
 				{
 					imagettftext($img, 9, 0, 15, 480, $textColorBlack, $verdanaFont, 'Shipping: Php ' . number_format($shippingFee, 2));
 					imagettftext($img, 9, 0, 15, 495, $textColorBlack, $verdanaFont, 'Courier: ' . $courierText);
-					imagettftext($img, 9, 0, 15, 570, $textColorBlack, $verdanaFont, 'Shipping Information:');
-					imagettftext($img, 9, 0, 15, 590, $textColorBlack, $verdanaFont, $options['first_name'] . ' ' . $options['last_name']);
-					imagettftext($img, 9, 0, 15, 605, $textColorBlack, $verdanaFont, $options['address']);
-					imagettftext($img, 9, 0, 15, 620, $textColorBlack, $verdanaFont, $options['addressb']);
-					imagettftext($img, 9, 0, 15, 635, $textColorBlack, $verdanaFont, $options['city']);
+					imagettftext($img, 9, 0, 15, 580, $textColorBlack, $verdanaFont, 'Shipping Information:');
+					imagettftext($img, 9, 0, 15, 600, $textColorBlack, $verdanaFont, $options['shippingFirstName'] . ' ' . $options['shippingLastName']);
+					imagettftext($img, 9, 0, 15, 615, $textColorBlack, $verdanaFont, $options['address']);
+					imagettftext($img, 9, 0, 15, 630, $textColorBlack, $verdanaFont, $options['addressb']);
+					imagettftext($img, 9, 0, 15, 645, $textColorBlack, $verdanaFont, $options['city']);
+					imagettftext($img, 8, 0, 15, 665, $textColorBlack, $verdanaFont, 'Ordered By: ' . $options['first_name'] . ' ' . $options['last_name']);
 					imagettftext($img, 8, 0, 15, 680, $textColorBlack, $verdanaFont, $options['fb']);
 					imagettftext($img, 8, 0, 15, 695, $textColorBlack, $verdanaFont, 'Phone: ' . $options['phone']);
 					if(!empty($options['email']))
@@ -347,6 +451,17 @@ class CreateText
 					imagettftext($img, 8, 0, 15, 760, $textColorBlack, $verdanaFont, 'Date: ' . date('F d, Y h:i A'));
 				}
 				imagettftext($img, 18, 0, 15, 535, $textColorBlack, $verdanaFont, 'Total: Php ' . number_format($total, 2));
+				if(!empty($statusPaid))
+				{
+					imagettftext($img, 9, 0, 15, 555, $textColorBlack, $verdanaFont, 'PAID ' . number_format($paymentAmount, 2) . ' via ' . $paymentCenterName . ' (' . $orderData->paid_date_at->format('m/d/Y') . ')');
+				}
+				if(!empty($orderData) && $orderData->status == 1 && !empty($options['step']) && $options['step']== 5)
+				{
+					$orderData->total = $total;
+					$orderData->subtotal = $subTotal;
+					$orderData->shipping_fee = $shippingFee;
+					$orderData->save();
+				}
 			}
 		}
 		else
@@ -355,12 +470,26 @@ class CreateText
 		}
 		if(!empty($hasBorder))
 		{
-			imagettftext($img, 7, 0, 15, $boxHeight - (10 + $borderWidth), $textColorBlack, $verdanaFont, 'Create your necklace at http://zivsluck.com');
+			imagettftext($img, 7, 0, 15, $brandingHeightPosition - (10 + $borderWidth), $textColorBlack, $verdanaFont, 'Create your necklace at http://zivsluck.com');
 		}
 		else
 		{
-			imagettftext($img, 7, 0, 15, $boxHeight - 10, $textColorBlack, $verdanaFont, 'Create your necklace at http://zivsluck.com');
+			imagettftext($img, 7, 0, 15, $brandingHeightPosition - 10, $textColorBlack, $verdanaFont, 'Create your necklace at http://zivsluck.com');
 		}
+
+		if(!empty($statusNew))
+		{
+			$paymentDetailsIm = imagecreatefrompng($paymentDetails);
+			imagecopy($img, $paymentDetailsIm, 0, 800, 0, 0, $boxWidth, $boxHeight);
+		}
+		if(!empty($statusPaid))
+		{
+			if(!empty($paymentDetailsIm))
+			{
+				imagecopy($img, $paymentDetailsIm, 0, 800, 0, 0, $boxWidth, $boxHeight);
+			}
+		}
+
 		$this->_image = $img;
 		return $this;
 	}

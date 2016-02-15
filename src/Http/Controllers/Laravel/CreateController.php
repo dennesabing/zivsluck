@@ -10,7 +10,7 @@ namespace Zivsluck\Http\Controllers\Laravel;
  * @author Dennes B Abing <dennes.b.abing@gmail.com>
  * @license proprietary
  * @copyright Copyright (c) 2016 ClaremontDesign/MadLabs-Dx
- * @file PageController.php
+ * @file CreateController.php
  * @project Zivsluck
  * @package Zivsluck\Http\Controllers
  */
@@ -43,28 +43,4 @@ class CreateController extends Controller
 		$create = true;
 		return $this->view(zbase_view_file_contents('customize.image'), compact('name', 'font', 'create', 'material', 'options'));
 	}
-
-	public function order()
-	{
-		$id = $this->getRouteParameter('id', false);
-		$task = $this->getRouteParameter('task', false);
-		if(!empty($id))
-		{
-			$order = zbase_entity('custom_orders')->repository()->byId($id);
-			if(!empty($order))
-			{
-				if($task == 'download')
-				{
-					return $order->download();
-				}
-				if($task == 'dealer')
-				{
-					return $order->dealer();
-				}
-				return $order->serveImage();
-			}
-		}
-		return $this->notfound('404 Order Not Found.');
-	}
-
 }

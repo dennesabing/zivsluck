@@ -29,6 +29,8 @@ if(empty($create))
 				{
 					if($options['step'] == 5)
 					{
+						$dataOptions = $options;
+						unset($dataOptions['step']);
 						$data = [
 							'status' => 1,
 							'text' => $name,
@@ -38,7 +40,7 @@ if(empty($create))
 							'chain_length' => $options['chainLength'],
 							'name' => $options['first_name'] . ' ' . $options['last_name'],
 							'email' => $options['email'],
-							'details' => json_encode($options)
+							'details' => json_encode($dataOptions)
 						];
 						$orderData = zbase_entity('custom_orders')->create($data);
 						$options['oid'] = $orderData->maskedId();
@@ -47,12 +49,13 @@ if(empty($create))
 				$url = zbase_url_from_route('createImage', compact('name', 'font', 'material')) . '?' . zbase_url_array_to_get($options);
 				$fontName = $fontDetails['name'];
 				$str = '<div class="imagePreview"><div id="droppableWrapper"><div id="droppableWindow"></div></div>'
-						. '<img src="' . $url . '" alt="' . $fontName . '" data-font="' . $font . '" data-fontname="' . $fontName . '"/><br /><br />';
+						. '<img ' . (!empty($orderData) ? 'data-order="' . $orderData->maskedId() : null ) . '" src="' . $url . '" alt="' . $fontName . '" data-font="' . $font . '" data-fontname="' . $fontName . '"/><br /><br />';
 				if(!empty($orderData))
 				{
 					$orderData->sendOrderToShane();
+					$str .= '<input type="hidden" id="orderId" name="orderId" value="' . $orderData->maskedId() . '" />';
 					$str .= '<br /><button onclick="zivsluck_orderDownload(\'' . $orderData->maskedId() . '\')" class="btn btn-info">Save Order</button>';
-					$str .= '&nbsp;<a href="' . zbase_url_create('customize') . '" class="btn btn-success">Create again!</a>';
+					$str .= '&nbsp;<a href="' . zbase_url_from_route('customize') . '" class="btn btn-success">Create again!</a>';
 				}
 				$str .= zbase_csrf_token_field();
 				$str .= '</div>';

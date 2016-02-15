@@ -1,12 +1,6 @@
 <?php
 zbase_view_head_meta_add('_token', zbase_csrf_token());
 ?>
-<div class="row">
-	<div class="col-md-12">
-		<a href="/" title="ZivsLuck" class="logo">ZivsLuck</a>
-	</div>
-</div>
-
 <div class="row" style="border-bottom: 2px solid #EBEBEB;padding-bottom:20px;">
 	<div class="col-md-6">
 
@@ -23,6 +17,8 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 		{!! view(zbase_view_file_contents('customize.final')) !!}
 	</div>
 	<div class="col-md-6">
+
+		{!! view(zbase_view_file_contents('customize.addonControl')) !!}
 		<div id="customizedImage" class="col-md-12" style="padding-top: 20px;overflow:hidden;"></div>
 		<div id="submitButtons" class="col-md-12" style="padding-top: 20px;"></div>
 		<div id="bayadCenterId" class="col-md-12" style="padding-top: 20px;display: none;">
@@ -67,11 +63,66 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 	#addonsForm{
 		margin-bottom: 20px;
 	}
+
+	@media (min-width: 320px) and (max-width: 550px) {
+		#customizedImage{
+			padding-left:0px;
+		}
+	}
 </style>
 @append
 @section('body_bottom')
 <script type="text/javascript">
+	function zivsluck_exit_alert() {
+		var step = parseInt(jQuery('#step').val());
+		var font = jQuery('#font').val();
+		if (step === 5)
+		{
+			return 'Order processing is in progress... Kindly just wait!';
+		} else if (step > 1 && step < 5)
+		{
+			return 'You have customized necklace in progress, are you sure you want to cancel?';
+		} else {
+			if (font != 'all')
+			{
+				return 'You have customized necklace in progres, are you sure you want to cancel?';
+			}
+		}
+		return '';
+	}
+
 	var zivsluckFonts = <?php echo json_encode(zbase_config_get('zivsluck.fontmaps')); ?>;
+	var zivsluckChains = <?php echo json_encode(zbase_config_get('zivsluck.chains')); ?>;
+	var addon = '';
+	function zivsluck_shutdown_ordering(tag)
+	{
+		if (tag == 'fontToMaterial')
+		{
+			jQuery('.btn-next').hide();
+		}
+	}
+	function zivsluck_start_ordering()
+	{
+		jQuery('.btn-next').show();
+	}
+	function zivsluck_check_fontToMaterial()
+	{
+		var material = jQuery('#material').val();
+		var font = jQuery('#font').val();
+		if (!empty(zivsluckChains[material]['fonts']))
+		{
+			if (!empty(zivsluckChains[material]['fonts']['not']))
+			{
+				if (in_array(font, zivsluckChains[material]['fonts']['not']))
+				{
+					jQuery('.btn-next').hide();
+					zivsluck_shutdown_ordering('fontToMaterial');
+					return;
+				}
+			}
+		}
+		zivsluck_start_ordering();
+	}
 	function zivsluck_load()
 	{
 		var step = parseInt(jQuery('#step').val());
@@ -86,19 +137,24 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 		var chain = jQuery('#chain').val();
 		var chainLength = jQuery('#chain-length').val();
 		var data = {};
-		var addon = '';
 		jQuery('.draggable.selected').each(function (i, v) {
 			var addn = jQuery(v);
-			addon += addn.attr('data-name') + '-' + addn.attr('data-position') + '-' + addn.context.width + 'x' + addn.context.height + '|';
+			addon += addn.attr('data-name') + '-' + addn.attr('data-position') + '-' + parseInt(addn.css('width')) + 'x' + parseInt(addn.css('height')) + '|';
 		});
-		if (step >= 3)
+		if (step >= 2)
 		{
 			jQuery('#form-group-ordernotes').hide();
+			jQuery('#addOnControls').hide();
+			jQuery('#addOnControlsPosition').hide();
 		} else {
 			jQuery('#form-group-ordernotes').show();
 		}
 		if (step === 4 || step === 5)
 		{
+			if(step === 5)
+			{
+				jQuery('#orderConfirmationWrapper').remove();
+			}
 			var fName = jQuery('#first_name');
 			var lName = jQuery('#last_name');
 			var city = jQuery('#city');
@@ -110,7 +166,12 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 			var fb = jQuery('#fb');
 			var email = jQuery('#email');
 			var orderNotes = jQuery('#orderNotes');
+			var shippingFirstName = jQuery('#shipping_first_name');
+			var shippingLastName = jQuery('#shipping_last_name');
 			data = {
+				shippingFirstName: shippingFirstName.val(),
+				shippingLastName: shippingLastName.val(),
+				shippingSame: zbase_get_checkbox_value('#shippingSame'),
 				addon: addon,
 				chain: chain,
 				customerNote: orderNotes.val(),
@@ -137,13 +198,19 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 			data = {chain: chain, chainLength: chainLength};
 		}
 		$.ajax({
-			type: 'POST',
+			type: 'GET',
 			url: '<?php echo zbase_url_from_route('create') ?>/' + text + '/' + font + '/' + material,
 			data: data,
 			beforeSend: function () {
-				jQuery('#customizedImage').html('<p class="bg-info" style="padding:20px;">Loading...</p>');
+				if (step === 5 && font != 'all')
+				{
+					jQuery('#customizedImage').html('<p class="bg-danger" style="padding:20px;">Prcessing your order, kindly wait...</p>');
+				} else {
+					jQuery('#customizedImage').html('<p class="bg-info" style="padding:20px;">Creating a preview, kindly wait...</p>');
+				}
 			},
 			success: function (data) {
+				window.onbeforeunload = zivsluck_exit_alert;
 				jQuery('#customizedImage').html(data);
 				if (step === 1 && font != 'all')
 				{
@@ -152,14 +219,14 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 				if (step === 2 && font != 'all')
 				{
 					var htmlButtons = '<button onclick="zivsluck_addOnsBack();" id="btnAddOnsBack" class="btn btn-default">Back</button>';
-					htmlButtons += '<br /><br /><br /><button onclick="zivsluck_shippingProcess();" id="btnCheckoutNecklace" class="btn btn-success">Checkout this Necklace</button>';
+					htmlButtons += '<br /><br /><br /><button onclick="zivsluck_shippingProcess();" id="btnCheckoutNecklace" class="btn btn-success btn-next">Checkout this Necklace</button>';
 					jQuery('#submitButtons').html(htmlButtons);
 				}
 				if (step === 4 && font != 'all')
 				{
-					var htmlButtons = '<div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I Agree and I understand the Terms and Conditions.</label></div>';
+					var htmlButtons = '<div id="orderConfirmationWrapper"><div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I Agree and I understand the Terms and Conditions.</label></div>';
 					htmlButtons += '<br /><button onclick="zivsluck_confirmOrderCancel();" id="btnConfirmOrderCancel" class="btn btn-danger">Cancel Order</button>';
-					htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success">Yes, I want to order</button>';
+					htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success btn-next">Yes, I want to order</button></div>';
 					jQuery('#submitButtons').html(htmlButtons);
 				}
 				if (step === 5 && font != 'all')
@@ -169,8 +236,28 @@ zbase_view_head_meta_add('_token', zbase_csrf_token());
 					jQuery('#confirmOrderForm').remove();
 					jQuery('#finalOrderForm').show();
 					jQuery('#bayadCenterId').show();
+
+					data = jQuery.parseHTML(data);
+					var orderInput = jQuery(data).find('#orderId');
+
+					if (orderInput.length > 0)
+					{
+						var orderId = orderInput.val();
+						if (!empty(orderId))
+						{
+							jQuery('#orderId').text(orderId);
+							jQuery('#orderImageDownload').attr('href', '/order/' + orderId + '/download');
+						}
+					}
 					var htmlButtons = '';
 					jQuery('#submitButtons').html(htmlButtons);
+					window.onbeforeunload = null;
+					scroll(0, 0);
+					jQuery('#orderConfirmationWrapper').remove();
+				}
+				if (step === 1 && font != 'all')
+				{
+					zivsluck_check_fontToMaterial();
 				}
 			}}
 		);

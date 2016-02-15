@@ -6,6 +6,8 @@
 			<li>Confirmation message will be sent via SMS and Facebook message to confirm availability of your order.</li>
 			<li>Once order has been confirmed, you need to send the payment via available methods.</li>
 			<li>Once payment has been made, please send us a copy of the deposit slip as Proof of Payment.</li>
+			<li>You can send to us the deposit/payment slip using the Update Order page at
+				<a target="_blank" href="<?php echo zbase_url_from_route('orderUpdate')?>">http://zivsluck.com/update-order</a>.</li>
 			<li><strong>No Proof of Payment, No Order Processing.</strong></li>
 			<li>No cancellation of order once payment has been made.</li>
 			<li>No rush orders</li>
@@ -58,7 +60,6 @@
 		jQuery('#shippingForm').hide();
 		jQuery('#customizeForm').show();
 		jQuery('#confirmOrderForm').hide();
-		scroll(0, 0);
 		jQuery('#step').val(1);
 		zivsluck_load();
 	}

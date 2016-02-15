@@ -73,6 +73,9 @@ return [
 				],
 			],
 			'silver' => [
+				'fonts' => [
+					'not' => ['scriptina']
+				],
 				'svc-1' => [
 					'name' => 'SVC-1',
 					'file' => 'silver-1.png',
@@ -86,7 +89,7 @@ return [
 				'svc-3' => [
 					'name' => 'SVC-3',
 					'file' => 'silver-3.png',
-					'enable' => true
+					'enable' => true,
 				],
 			],
 			'goldplated' => [

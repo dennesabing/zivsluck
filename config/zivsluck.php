@@ -66,18 +66,26 @@ return [
 		],
 		'paymentCenters' => [
 			'cebuana' => [
+				'name' => 'Cebuana Lhuillier',
+				'shortName' => 'Cebuana',
 				'file' => 'cebuanaLhuillier.png',
 				'enable' => true
 			],
 			'mlhuillier' => [
+				'name' => 'MLhuillier',
+				'shortName' => 'MLhuillier',
 				'file' => 'mLhuillier.png',
 				'enable' => true
 			],
 			'palawan' => [
+				'name' => 'Palawan Express',
+				'shortName' => 'Palawan',
 				'file' => 'palawanExpress.png',
 				'enable' => true
 			],
 			'rd' => [
+				'name' => 'RD Pawnshop',
+				'shortName' => 'RD',
 				'file' => 'rdPawnshop.png',
 				'enable' => true
 			],
@@ -87,6 +95,10 @@ return [
 		'class' => [
 			'create' => [
 				'name' => Zivsluck\Http\Controllers\__FRAMEWORK__\CreateController::class,
+				'enable' => true
+			],
+			'order' => [
+				'name' => Zivsluck\Http\Controllers\__FRAMEWORK__\OrderController::class,
 				'enable' => true
 			],
 			'maintenance' => [
@@ -174,11 +186,23 @@ return [
 		],
 		'order' => [
 			'controller' => [
-				'name' => 'create',
+				'name' => 'order',
 				'method' => 'order',
 				'enable' => true
 			],
 			'url' => '/order/{id?}/{task?}',
+			'enable' => true
+		],
+		'orderUpdate' => [
+			'controller' => [
+				'name' => 'order',
+				'method' => 'update',
+				'enable' => true
+			],
+			'form' => [
+				'enable' => true
+			],
+			'url' => '/update-order',
 			'enable' => true
 		],
 	]
