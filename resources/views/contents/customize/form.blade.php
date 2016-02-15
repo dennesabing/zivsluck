@@ -1,6 +1,10 @@
 <?php
 zbase_view_head_meta_add('_token', zbase_csrf_token());
 $checkout = zbase_config_get('zivsluck.checkout.enable', false);
+if(empty($checkout))
+{
+	zbase_alert('warning', 'Checkout is currently disabled. Still, you can create customized necklace.');
+}
 ?>
 <div class="row" style="border-bottom: 2px solid #EBEBEB;padding-bottom:20px;">
 	<div class="col-md-6">
@@ -154,7 +158,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		}
 		if (step === 4 || step === 5)
 		{
-			if(step === 5)
+			if (step === 5)
 			{
 				jQuery('#orderConfirmationWrapper').remove();
 			}
@@ -222,47 +226,47 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 				if (step === 2 && font != 'all')
 				{
 					var htmlButtons = '<button onclick="zivsluck_addOnsBack();" id="btnAddOnsBack" class="btn btn-default">Back</button>';
-					<?php if(!empty($checkout)):?>
-					htmlButtons += '<br /><br /><br /><button onclick="zivsluck_shippingProcess();" id="btnCheckoutNecklace" class="btn btn-success btn-next">Checkout this Necklace</button>';
-					<?php endif;?>
+<?php if(!empty($checkout)): ?>
+						htmlButtons += '<br /><br /><br /><button onclick="zivsluck_shippingProcess();" id="btnCheckoutNecklace" class="btn btn-success btn-next">Checkout this Necklace</button>';
+<?php endif; ?>
 					jQuery('#submitButtons').html(htmlButtons);
 				}
 				if (step === 4 && font != 'all')
 				{
-					<?php if(!empty($checkout)):?>
-					var htmlButtons = '<div id="orderConfirmationWrapper"><div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I Agree and I understand the Terms and Conditions.</label></div>';
-					htmlButtons += '<br /><button onclick="zivsluck_confirmOrderCancel();" id="btnConfirmOrderCancel" class="btn btn-danger">Cancel Order</button>';
-					htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success btn-next">Yes, I want to order</button></div>';
-					jQuery('#submitButtons').html(htmlButtons);
-					<?php endif;?>
+<?php if(!empty($checkout)): ?>
+						var htmlButtons = '<div id="orderConfirmationWrapper"><div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I Agree and I understand the Terms and Conditions.</label></div>';
+						htmlButtons += '<br /><button onclick="zivsluck_confirmOrderCancel();" id="btnConfirmOrderCancel" class="btn btn-danger">Cancel Order</button>';
+						htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success btn-next">Yes, I want to order</button></div>';
+						jQuery('#submitButtons').html(htmlButtons);
+<?php endif; ?>
 				}
 				if (step === 5 && font != 'all')
 				{
-					<?php if(!empty($checkout)):?>
-					jQuery('#shippingForm').remove();
-					jQuery('#customizeForm').remove();
-					jQuery('#confirmOrderForm').remove();
-					jQuery('#finalOrderForm').show();
-					jQuery('#bayadCenterId').show();
+<?php if(!empty($checkout)): ?>
+						jQuery('#shippingForm').remove();
+						jQuery('#customizeForm').remove();
+						jQuery('#confirmOrderForm').remove();
+						jQuery('#finalOrderForm').show();
+						jQuery('#bayadCenterId').show();
 
-					data = jQuery.parseHTML(data);
-					var orderInput = jQuery(data).find('#orderId');
+						data = jQuery.parseHTML(data);
+						var orderInput = jQuery(data).find('#orderId');
 
-					if (orderInput.length > 0)
-					{
-						var orderId = orderInput.val();
-						if (!empty(orderId))
+						if (orderInput.length > 0)
 						{
-							jQuery('#orderId').text(orderId);
-							jQuery('#orderImageDownload').attr('href', '/order/' + orderId + '/download');
+							var orderId = orderInput.val();
+							if (!empty(orderId))
+							{
+								jQuery('#orderId').text(orderId);
+								jQuery('#orderImageDownload').attr('href', '/order/' + orderId + '/download');
+							}
 						}
-					}
-					var htmlButtons = '';
-					jQuery('#submitButtons').html(htmlButtons);
-					window.onbeforeunload = null;
-					scroll(0, 0);
-					jQuery('#orderConfirmationWrapper').remove();
-					<?php endif;?>
+						var htmlButtons = '';
+						jQuery('#submitButtons').html(htmlButtons);
+						window.onbeforeunload = null;
+						scroll(0, 0);
+						jQuery('#orderConfirmationWrapper').remove();
+<?php endif; ?>
 				}
 				if (step === 1 && font != 'all')
 				{
