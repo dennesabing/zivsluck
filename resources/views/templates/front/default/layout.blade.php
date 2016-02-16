@@ -1,3 +1,6 @@
+<?php
+ob_start('zbase_remove_whitespaces');
+?>
 <!DOCTYPE html>
 <html lang="en" zbase-package="<?php echo zbase_view_template_package() ?>">
 	<head>
@@ -47,3 +50,6 @@
 		</div>
 	</body>
 </html>
+<?php
+ob_flush();
+?>

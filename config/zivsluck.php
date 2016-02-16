@@ -132,10 +132,6 @@ return [
 			'controller' => [
 				'name' => 'create',
 				'method' => 'index',
-				'enable' => false
-			],
-			'view' => [
-				'name' => zivsluck_tag() . '::templates.front.default.maintenance',
 				'enable' => true
 			],
 			'url' => '/',

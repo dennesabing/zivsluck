@@ -341,6 +341,12 @@ if(empty($checkout))
 		window.location = '/order/' + id + '/download';
 	}
 	jQuery(document).ready(function () {
+		jQuery('#name').keypress(function (e) {
+			if (e.which == 13) {
+				e.preventDefault();
+				zivsluck_load();
+			}
+		});
 		jQuery('#btnCustomize').click(function (e) {
 			e.preventDefault();
 			zivsluck_load();
