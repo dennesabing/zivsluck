@@ -371,7 +371,7 @@ class CreateText
 		if($hasDetails)
 		{
 			// <editor-fold defaultstate="collapsed" desc="DISCOUNT">
-			$discountInPrice = zbase_config_get('promotion.price', 0.00);
+			$discountInPrice = zbase_config_get('zivsluck.promotion.discount', 0.00);
 			if(!empty($orderData) && !empty($options['final']))
 			{
 				$promo = !empty($options['promo_flag']) ? true : false;
@@ -597,7 +597,7 @@ class CreateText
 			if(!empty($orderEntity->count()))
 			{
 				$orderEntity = $orderEntity->first();
-				if($orderEntity->shippingAddress() == $shippingAddress && zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()) && $orderEntity->material == $material)
+				if($orderEntity->shippingAddress() == $shippingAddress && zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()))
 				{
 					return $orderEntity;
 				}

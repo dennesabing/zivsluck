@@ -79,6 +79,7 @@ if(empty($checkout))
 <script type="text/javascript">
 	var zivsluckFonts = <?php echo json_encode(zbase_config_get('zivsluck.fontmaps')); ?>;
 	var zivsluckChains = <?php echo json_encode(zbase_config_get('zivsluck.chains')); ?>;
+	var zivsluckChainsConstraint = false;
 	var zivsluckAddOnsToFonts = <?php echo json_encode(zbase_config_get('zivsluck.addons.configuration.fonts')); ?>;
 	var addon = '';
 </script>
@@ -115,21 +116,24 @@ if(empty($checkout))
 	}
 	function zivsluck_check_fontToMaterial()
 	{
-		var material = jQuery('#material').val();
-		var font = jQuery('#font').val();
-		if (!empty(zivsluckChains[material]['fonts']))
+		if (!empty(zivsluckChainsConstraint))
 		{
-			if (!empty(zivsluckChains[material]['fonts']['not']))
+			var material = jQuery('#material').val();
+			var font = jQuery('#font').val();
+			if (!empty(zivsluckChains[material]['fonts']))
 			{
-				if (in_array(font, zivsluckChains[material]['fonts']['not']))
+				if (!empty(zivsluckChains[material]['fonts']['not']))
 				{
-					jQuery('.btn-next').hide();
-					zivsluck_shutdown_ordering('fontToMaterial');
-					return;
+					if (in_array(font, zivsluckChains[material]['fonts']['not']))
+					{
+						jQuery('.btn-next').hide();
+						zivsluck_shutdown_ordering('fontToMaterial');
+						return;
+					}
 				}
 			}
+			zivsluck_start_ordering();
 		}
-		zivsluck_start_ordering();
 	}
 	function zivsluck_load()
 	{
@@ -145,7 +149,7 @@ if(empty($checkout))
 		var chain = jQuery('#chain').val();
 		var chainLength = jQuery('#chain-length').val();
 		var data = {};
-		if(step === 1)
+		if (step === 1)
 		{
 			/**
 			 * Reset Addons
@@ -154,7 +158,7 @@ if(empty($checkout))
 		}
 		jQuery('.draggable.selected').each(function (i, v) {
 			var addn = jQuery(v);
-			addon += addn.attr('data-name') + '-' + addn.attr('data-position') + '-' + parseInt(addn.css('width')) + 'x' + parseInt(addn.css('height'))+ '-' + parseInt(addn.attr('data-rotate')) + '|';
+			addon += addn.attr('data-name') + '-' + addn.attr('data-position') + '-' + parseInt(addn.css('width')) + 'x' + parseInt(addn.css('height')) + '-' + parseInt(addn.attr('data-rotate')) + '|';
 		});
 		if (step >= 2)
 		{
@@ -213,7 +217,7 @@ if(empty($checkout))
 			data = {chain: chain, chainLength: chainLength};
 		}
 		$.ajax({
-			type: 'get',
+			type: 'post',
 			url: '<?php echo zbase_url_from_route('create') ?>/' + text + '/' + font + '/' + material,
 			data: data,
 			beforeSend: function () {
@@ -243,9 +247,9 @@ if(empty($checkout))
 				{
 <?php if(!empty($checkout)): ?>
 						var htmlButtons = '<div id="orderConfirmationWrapper">\n\
-								<div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I agree and I understand the Terms and Conditions.</label>\n\
-								<div class="checkbox"><label><input type="checkbox" required="required" id="order_checked" name="order_checked" value="1" />I checked and confirmed the details of my order are correct.</label>\n\
-						</div>';
+									<div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I agree and I understand the Terms and Conditions.</label>\n\
+									<div class="checkbox"><label><input type="checkbox" required="required" id="order_checked" name="order_checked" value="1" />I checked and confirmed the details of my order are correct.</label>\n\
+							</div>';
 						htmlButtons += '<br /><button onclick="zivsluck_confirmOrderCancel();" id="btnConfirmOrderCancel" class="btn btn-danger">Cancel Order</button>';
 						htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success btn-next">Yes, I want to order</button></div>';
 						jQuery('#submitButtons').html(htmlButtons);
@@ -309,21 +313,24 @@ if(empty($checkout))
 			zivsluck_load();
 		} else {
 			zivsluck_load();
-			if (material == 'stainless')
+			if (!empty(zivsluckChainsConstraint))
 			{
-				$.each(zivsluckFonts, function (index, val) {
-					if (index == font)
-					{
-						if (val.chaingroup !== undefined)
+				if (material == 'stainless')
+				{
+					$.each(zivsluckFonts, function (index, val) {
+						if (index == font)
 						{
-							jQuery('.chain-type').hide();
-							$.each(val.chaingroup, function (i, v) {
-								jQuery('.chain-type-group-' + v).show();
-								jQuery('.chain-type-group-' + v).first().find('input').attr('checked', true);
-							});
+							if (val.chaingroup !== undefined)
+							{
+								jQuery('.chain-type').hide();
+								$.each(val.chaingroup, function (i, v) {
+									jQuery('.chain-type-group-' + v).show();
+									jQuery('.chain-type-group-' + v).first().find('input').attr('checked', true);
+								});
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}
 	}
