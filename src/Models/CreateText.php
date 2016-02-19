@@ -593,10 +593,22 @@ class CreateText
 		{
 			$ownerName = $options['first_name'] . ' ' . $options['last_name'];
 			$shippingAddress = $options['address'] . ' ' . $options['addressb'] . ', ' . $options['city'];
-			$orderEntity = zbase_entity('custom_orders')->repository()->setDebug(false)->all(['*'], ['name' => $ownerName, 'material' => $material, 'promo_flag' => 0], ['order_id' => 'asc']);
+			$filters = ['name' => $ownerName, 'material' => $material, 'promo_flag' => 0];
+			if(!empty($options['oid']))
+			{
+				// $filters['order_id'] = ['ne' => ['field' => 'order_id','value' => $options['oid']]];
+			}
+			$orderEntity = zbase_entity('custom_orders')->repository()->setDebug(false)->all(['*'], $filters, ['order_id' => 'asc']);
 			if(!empty($orderEntity->count()))
 			{
 				$orderEntity = $orderEntity->first();
+				if(!empty($options['oid']))
+				{
+					if($orderEntity->id() == $options['oid'])
+					{
+						return false;
+					}
+				}
 				if($orderEntity->shippingAddress() == $shippingAddress && zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()))
 				{
 					return $orderEntity;

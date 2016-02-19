@@ -223,7 +223,7 @@ if(empty($checkout))
 			beforeSend: function () {
 				if (step === 5 && font != 'all')
 				{
-					jQuery('#customizedImage').html('<p class="bg-danger" style="padding:20px;">Prcessing your order, kindly wait...</p>');
+					jQuery('#customizedImage').html('<p class="bg-danger" style="padding:20px;">Processing your order, kindly wait...</p>');
 				} else {
 					jQuery('#customizedImage').html('<p class="bg-info" style="padding:20px;">Creating a preview, kindly wait...</p>');
 				}
