@@ -206,8 +206,6 @@ return [
 				'name' => 'Monogram 6',
 				'file' => 'monogram6.png',
 				'enable' => true,
-				'displayWidth' => '64',
-				'displayHeight' => '32',
 			],
 		],
 	]
