@@ -1,3 +1,6 @@
+<?php
+$checkout = zbase_config_get('zivsluck.checkout.enable', false);
+?>
 <div id="addonsForm" style="display: none;">
 	<h2>Addons</h2>
 	<p>

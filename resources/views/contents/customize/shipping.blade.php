@@ -15,7 +15,6 @@ if(zbase_is_dev())
 	];
 }
 ?>
-<?php if(!empty($checkout)):?>
 <div id="shippingForm" style="display: none;">
 	<h1>Order Information</h1>
 	<div class="form-group">
@@ -113,6 +112,7 @@ if(zbase_is_dev())
 </style>
 @append
 @section('body_bottom')
+<?php if(!empty($checkout)):?>
 <script type="text/javascript">
 
 	function zivsluck_shippingProcess()
@@ -134,12 +134,6 @@ if(zbase_is_dev())
 		jQuery('#city').blur(function () {
 			var city = jQuery('#city').val();
 			var meetupsCity = new Array('Davao', 'Davao City', 'General Santos', 'General Santos City', 'Gensan City', 'Gensan', 'Gen. Santos City', 'Gen. Santos');
-			if (in_array(city, meetupsCity))
-			{
-				//jQuery('#label-deliveryMode-meetUp').show();
-				//jQuery('#meetUpsInfo').show();
-				//return;
-			}
 			jQuery('#label-deliveryMode-meetUp').hide();
 			jQuery('#meetUpsInfo').hide();
 		});
@@ -241,5 +235,5 @@ if(zbase_is_dev())
 		});
 	});
 </script>
-@append
 <?php endif;?>
+@append

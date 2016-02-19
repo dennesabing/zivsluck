@@ -1,3 +1,6 @@
+<?php
+$checkout = zbase_config_get('zivsluck.checkout.enable', false);
+?>
 <div class="col-md-12">
 	<div id="addOnControls" class="row" style="display: none;">
 		<span class="controlLabel">Resize symbol</span>
