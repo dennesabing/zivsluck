@@ -20,25 +20,55 @@ return [
 				'enable' => false,
 				'unlimited' => false,
 				'droppable' => [
-					'top' => 50,
+					'top' => 40,
 					'left' => 0,
 					'width' => 290,
-					'height' => 100
+					'height' => 130
 				],
 				'fonts' => [
-					'scriptina' => ['heart']
+					// 'scriptina' => ['heart']
 				],
+			],
+			'block' => [
+				'name' => 'Block',
+				'file' => 'block.png',
+				'enable' => true,
+			],
+			'blockHollow' => [
+				'name' => 'Block Hollow',
+				'file' => 'blockHollow.png',
+				'enable' => true,
+			],
+			'circle' => [
+				'name' => 'Circle',
+				'file' => 'circle.png',
+				'enable' => true,
+			],
+			'circleHollow' => [
+				'name' => 'Circle Hollow',
+				'file' => 'circleHollow.png',
+				'enable' => true,
+			],
+			'triangle' => [
+				'name' => 'Triangle',
+				'file' => 'triangle.png',
+				'enable' => true,
+			],
+			'triangleHollow' => [
+				'name' => 'Triangle Hollow',
+				'file' => 'triangleHollow.png',
+				'enable' => true,
+			],
+			'hearthollow' => [
+				'name' => 'Heart',
+				'file' => 'heart-hollow.png',
+				'enable' => true,
 			],
 			'heart' => [
 				'name' => 'Heart',
 				'file' => 'heart.png',
 				'allowed' => 2,
 				'sameonly' => true,
-				'enable' => true,
-			],
-			'hearthollow' => [
-				'name' => 'Heart',
-				'file' => 'heart-hollow.png',
 				'enable' => true,
 			],
 			'diamond' => [
@@ -69,7 +99,7 @@ return [
 			'direction' => [
 				'name' => 'Direction',
 				'file' => 'direction.png',
-				'enable' => true,
+				'enable' => false,
 			],
 			'bubble' => [
 				'name' => 'Bubble',
@@ -104,17 +134,80 @@ return [
 			'marker' => [
 				'name' => 'Marker',
 				'file' => 'marker.png',
-				'enable' => true,
+				'enable' => false,
 			],
 			'gear' => [
 				'name' => 'Gear',
 				'file' => 'gear.png',
-				'enable' => true,
+				'enable' => false
 			],
 			'lock' => [
 				'name' => 'Lock',
 				'file' => 'lock.png',
 				'enable' => true,
+			],
+			'monogram1' => [
+				'name' => 'Monogram 1',
+				'file' => 'monogram1.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram1mirror' => [
+				'name' => 'Monogram 1 - Mirrored',
+				'file' => 'monogram1mirror.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram2' => [
+				'name' => 'Monogram 2',
+				'file' => 'monogram2.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram2mirror' => [
+				'name' => 'Monogram 2 - Mirrored',
+				'file' => 'monogram2mirror.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram3' => [
+				'name' => 'Monogram 3',
+				'file' => 'monogram3.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram3mirror' => [
+				'name' => 'Monogram 3 - Mirrored',
+				'file' => 'monogram3mirror.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram4' => [
+				'name' => 'Monogram 4',
+				'file' => 'monogram4.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram5' => [
+				'name' => 'Monogram 5',
+				'file' => 'monogram5.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
+			],
+			'monogram6' => [
+				'name' => 'Monogram 6',
+				'file' => 'monogram6.png',
+				'enable' => true,
+				'displayWidth' => '64',
+				'displayHeight' => '32',
 			],
 		],
 	]

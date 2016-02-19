@@ -34,6 +34,9 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 				<button class="btn btn-default btn-xs" id="addonPositionRight" type="button"><i class="glyphicon glyphicon-chevron-right"></i></button>
 				<button class="btn btn-default btn-xs" id="addonPositionUp" type="button"><i class="glyphicon glyphicon-chevron-up"></i></button>
 				<button class="btn btn-default btn-xs" id="addonPositionDown" type="button"><i class="glyphicon glyphicon-chevron-down"></i></button>
+				<button class="btn btn-default btn-xs" id="addonPositionRotate" type="button"><i class="glyphicon glyphicon-repeat"></i></button>
+				<!--<button class="btn btn-default btn-xs" id="addonPositionFlipH" type="button"><i class="glyphicon glyphicon-object-align-horizontal"></i></button>-->
+				<!--<button class="btn btn-default btn-xs" id="addonPositionFlipV" type="button"><i class="glyphicon glyphicon-object-align-vertical"></i></button>-->
 			</div>
 		</div>
 	</div>
@@ -41,6 +44,14 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 
 @section('head_bottom')
 <style type="text/css">
+	.flipped {
+		-moz-transform: scaleX(-1);
+		-o-transform: scaleX(-1);
+		-webkit-transform: scaleX(-1);
+		transform: scaleX(-1);
+		filter: FlipH;
+		-ms-filter: "FlipH";
+	}
 	.addon-controlable{
 		border:0px solid white;
 	}
@@ -55,8 +66,10 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	#addOnControlsPosition .positionControls{
 		position: relative;
 		z-index: 99999;
-		top: 60px;
-		left: 10px;
+		top: 10px;
+		left: 20px;
+		padding: 10px;
+		background: rgba(255,255,255,0.4);
 	}
 	#addOnControls{
 		position: absolute;
@@ -66,11 +79,12 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		position: relative;
 		z-index: 99999;
 		background: white;
-		top: 0px;
+		top: -50px;
 		left: 0px;
 		padding: 5px;
 		margin: 20px;
 		width: 280px;
+		background: rgba(255,255,255,0.4);
 	}
 	.spinner-addon {
 		width: 50px;
@@ -210,12 +224,21 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 			left: -20px;
 
 		}
+		#addOnControlsPosition .input-group-btn-vertical{
+			position: relative;
+			padding: 0px;
+			margin: 0px;
+			height: 140px;
+			left: -5px;
+			width: 120px;
+			top: -12px;
+		}
 		#addOnControlsPosition .positionControls{
 			border: 1px solid black;
 			position: relative;
 			top: -160px;
 			left: -20px;
-			width: 140px;
+			width: 121px;
 			background: rgba(255,255,255,0.5);
 			height: 140px;
 		}
@@ -226,22 +249,27 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		#addonPositionLeft{
 			position: relative;
 			top: 50px !important;
-			left: -5px !important;
+			left: -10px !important;
 		}
 		#addonPositionRight{
 			position: relative;
 			top: 50px;
-			left: 30px;
+			left: 35px;
 		}
 		#addonPositionUp{
-			top: -30px;
+			top: -35px;
 			position: relative;
 			left: 34px;
 		}
 		#addonPositionDown{
-			top: 50px;
+			top: 55px;
 			position: relative;
 			left: -9px;
+		}
+		#addonPositionRotate{
+			position: relative;
+			top: -30px;
+			left: 35px;
 		}
 
 	}
@@ -249,6 +277,16 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 @append
 @section('body_bottom')
 <script type="text/javascript">
+	function zivsluck_flip_h()
+	{
+		var addon = jQuery('.addon-controlable');
+		if(addon.hasClass('flipped'))
+		{
+			addon.removeClass('flipped');
+		} else {
+			addon.addClass('flipped');
+		}
+	}
 	function zivsluck_addOns_height_add()
 	{
 		var height = parseInt(jQuery('.addon-controlable').height(), 10) + 1;
@@ -301,10 +339,26 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		}
 		item.attr('data-position', newPosX + ',' + newPosY);
 	}
+	function zivsluck_addOn_rotate()
+	{
+		var deg = parseInt(jQuery('.addon-controlable').attr('data-rotate'), 10) + 90;
+		if(deg === 360)
+		{
+			deg = 0;
+		}
+		var degValue = 'rotate('+deg+'deg)';
+		jQuery('.addon-controlable').css({'-moz-transform':degValue,'transform': degValue,'-webkit-transform': degValue,'-ms-transform' : degValue}).attr('data-rotate', deg);
+	}
 	jQuery(document).ready(function () {
 		$('#addOnControls').draggable();
 		$('#addOnControlsPosition').draggable();
 
+		jQuery('#addonPositionFlipH').click(function () {
+			zivsluck_flip_h();
+		});
+		jQuery('#addonPositionRotate').click(function () {
+			zivsluck_addOn_rotate();
+		});
 		jQuery('#addonPositionLeft').click(function () {
 			zivsluck_addOn_position_set('left');
 		});

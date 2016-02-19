@@ -78,11 +78,6 @@ return [
 				'enable' => true,
 				'fontsize' => 35,
 				'chaingroup' => ['victoria'],
-				'material' => [
-					'stainless' => [
-						'price' => 270
-					]
-				]
 			],
 			'swirl-print' => [
 				'file' => 'swirl-print.ttf',
@@ -103,12 +98,7 @@ return [
 				'name' => 'Verdana',
 				'enable' => true,
 				'fontsize' => 23,
-				'chaingroup' => ['victoria'],
-				'material' => [
-					'stainless' => [
-						'price' => 270
-					]
-				]
+				'chaingroup' => ['victoria']
 			],
 		],
 	],

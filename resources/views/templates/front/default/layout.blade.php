@@ -46,7 +46,7 @@ ob_start('zbase_remove_whitespaces');
 		{!! zbase_view_render_body() !!}
 		@yield('body_bottom')
 		<div class="footer" style="text-align: center;width:100%;padding:20px 0px;border-top:2px solid #EBEBEB;">
-			&copy; Copyright <?php echo date('Y') ?>. All Rights Reserved. Website by <a href="http://claremontdesign.com" target="_blank">ClaremontDesign</a>
+			&copy; Copyright <?php echo date('Y') ?>. All Rights Reserved.<br />Website by <a href="http://claremontdesign.com" target="_blank">ClaremontDesign</a>
 		</div>
 	</body>
 </html>

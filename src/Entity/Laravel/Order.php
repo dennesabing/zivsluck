@@ -79,6 +79,25 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 	}
 
 	/**
+	 * Return the shipping address
+	 * @return string
+	 */
+	public function shippingAddress()
+	{
+		$details = $this->details();
+		return $details->address . ' ' . $details->addressb . ', ' . $details->city;
+	}
+
+	/**
+	 * Return the details
+	 * @return \Std
+	 */
+	public function details()
+	{
+		return json_decode($this->details);
+	}
+
+	/**
 	 * Serve the Image
 	 */
 	public function serveImage()
@@ -206,7 +225,7 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			$post_fields = array(
 				'chat_id' => $shane,
 				'photo' => new \CURLFile(realpath($image)),
-				'caption' => 'Payment received from ' . $this->name . ' via '.$this->paymentMerchant().' for Order ID ' . $this->maskedId()
+				'caption' => 'Payment received from ' . $this->name . ' via ' . $this->paymentMerchant() . ' for Order ID ' . $this->maskedId()
 			);
 
 			$ch = curl_init();

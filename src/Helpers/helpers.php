@@ -24,3 +24,12 @@ function zivsluck_tag()
 {
 	return strtolower('zivsluck');
 }
+
+/**
+ * Check if promotion is enabled
+ * @return boolean
+ */
+function zivsluck_promotion()
+{
+	return zbase_config_get('promotion.enabl', false);
+}

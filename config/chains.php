@@ -44,31 +44,31 @@ return [
 				'slcpwc-1' => [
 					'name' => 'SLCPWC-1',
 					'file' => 'stainless-pwc-1.png',
-					'enable' => true,
+					'enable' => false,
 					'group' => 'pwc',
 				],
 				'slcpwc-2' => [
 					'name' => 'SLCPWC-2',
 					'file' => 'stainless-pwc-2.png',
-					'enable' => true,
+					'enable' => false,
 					'group' => 'pwc',
 				],
 				'slcpwc-3' => [
 					'name' => 'SLCPWC-3',
 					'file' => 'stainless-pwc-3.png',
-					'enable' => true,
+					'enable' => false,
 					'group' => 'pwc',
 				],
 				'slcpwc-4' => [
 					'name' => 'SLCPWC-4',
 					'file' => 'stainless-pwc-4.png',
-					'enable' => true,
+					'enable' => false,
 					'group' => 'pwc',
 				],
 				'slcpwc-5' => [
 					'name' => 'SLCPWC-5',
 					'file' => 'stainless-pwc-5.png',
-					'enable' => true,
+					'enable' => false,
 					'group' => 'pwc',
 				],
 			],
@@ -111,11 +111,6 @@ return [
 				'gc-4' => [
 					'name' => 'GC-4',
 					'file' => 'gold-4.png',
-					'enable' => true
-				],
-				'gc-5' => [
-					'name' => 'GC-5',
-					'file' => 'gold-5.png',
 					'enable' => true
 				],
 			],

@@ -24,6 +24,7 @@ if(empty($checkout))
 	<div class="col-md-6">
 
 		{!! view(zbase_view_file_contents('customize.addonControl')) !!}
+		<a id="preview"></a>
 		<div id="customizedImage" class="col-md-12" style="padding-top: 20px;overflow:hidden;"></div>
 		<div id="submitButtons" class="col-md-12" style="padding-top: 20px;"></div>
 		<div id="bayadCenterId" class="col-md-12" style="padding-top: 20px;display: none;">
@@ -144,9 +145,16 @@ if(empty($checkout))
 		var chain = jQuery('#chain').val();
 		var chainLength = jQuery('#chain-length').val();
 		var data = {};
+		if(step === 1)
+		{
+			/**
+			 * Reset Addons
+			 */
+			jQuery('.draggable.cloned').remove();
+		}
 		jQuery('.draggable.selected').each(function (i, v) {
 			var addn = jQuery(v);
-			addon += addn.attr('data-name') + '-' + addn.attr('data-position') + '-' + parseInt(addn.css('width')) + 'x' + parseInt(addn.css('height')) + '|';
+			addon += addn.attr('data-name') + '-' + addn.attr('data-position') + '-' + parseInt(addn.css('width')) + 'x' + parseInt(addn.css('height'))+ '-' + parseInt(addn.attr('data-rotate')) + '|';
 		});
 		if (step >= 2)
 		{
@@ -205,7 +213,7 @@ if(empty($checkout))
 			data = {chain: chain, chainLength: chainLength};
 		}
 		$.ajax({
-			type: 'GET',
+			type: 'get',
 			url: '<?php echo zbase_url_from_route('create') ?>/' + text + '/' + font + '/' + material,
 			data: data,
 			beforeSend: function () {
@@ -234,7 +242,10 @@ if(empty($checkout))
 				if (step === 4 && font != 'all')
 				{
 <?php if(!empty($checkout)): ?>
-						var htmlButtons = '<div id="orderConfirmationWrapper"><div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I Agree and I understand the Terms and Conditions.</label></div>';
+						var htmlButtons = '<div id="orderConfirmationWrapper">\n\
+								<div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I agree and I understand the Terms and Conditions.</label>\n\
+								<div class="checkbox"><label><input type="checkbox" required="required" id="order_checked" name="order_checked" value="1" />I checked and confirmed the details of my order are correct.</label>\n\
+						</div>';
 						htmlButtons += '<br /><button onclick="zivsluck_confirmOrderCancel();" id="btnConfirmOrderCancel" class="btn btn-danger">Cancel Order</button>';
 						htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success btn-next">Yes, I want to order</button></div>';
 						jQuery('#submitButtons').html(htmlButtons);
@@ -345,11 +356,13 @@ if(empty($checkout))
 			if (e.which == 13) {
 				e.preventDefault();
 				zivsluck_load();
+				window.location = '#preview';
 			}
 		});
 		jQuery('#btnCustomize').click(function (e) {
 			e.preventDefault();
 			zivsluck_load();
+			window.location = '#preview';
 		});
 		jQuery('#font').change(function (e) {
 			e.preventDefault();

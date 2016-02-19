@@ -297,6 +297,13 @@ return [
 						'type' => 'timestamp',
 						'comment' => 'Date Shipped'
 					],
+					'promo_flag' => [
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'boolean',
+						'nullable' => true,
+						'comment' => 'Promo Eligibility Flag'
+					],
 				]
 			]
 		]

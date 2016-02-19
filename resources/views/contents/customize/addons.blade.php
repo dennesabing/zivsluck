@@ -25,7 +25,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 						$addonWidth = !empty($addon['displayWidth']) ? $addon['displayWidth'] : 32;
 						?>
 						<div class="addon col-md-1 col-xs-3 thumbnail addon-thumbnail addon-thumbnail-<?php echo $name ?>">
-							<img style="width:<?php echo $addonWidth ?>px;height:<?php echo $addonHeight ?>px;" data-width="<?php echo $addonWidth ?>" data-height="<?php echo $addonHeight ?>" data-sameonly="<?php echo (!empty($addon['sameonly']) ? 1 : 0) ?>" data-allowed="<?php echo (!empty($addon['allowed']) ? $addon['allowed'] : 1) ?>" class="draggable enable addon-<?php echo $name ?>" data-name="<?php echo $name ?>" src="/zbase/assets/zivsluck/img/addons/<?php echo $addon['file'] ?>" alt="<?php echo $addon['name'] ?>">
+							<img data-rotate="0" style="width:<?php echo $addonWidth ?>px;height:<?php echo $addonHeight ?>px;" data-width="<?php echo $addonWidth ?>" data-height="<?php echo $addonHeight ?>" data-sameonly="<?php echo (!empty($addon['sameonly']) ? 1 : 0) ?>" data-allowed="<?php echo (!empty($addon['allowed']) ? $addon['allowed'] : 1) ?>" class="draggable enable addon-<?php echo $name ?>" data-name="<?php echo $name ?>" src="/zbase/assets/zivsluck/img/addons/<?php echo $addon['file'] ?>" alt="<?php echo $addon['name'] ?>">
 						</div>
 					<?php endif; ?>
 					<?php
@@ -129,7 +129,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 							item.addClass('cloned');
 							item.click(function(){
 								jQuery('.draggable.selected').removeClass('addon-controlable');
-								jQuery(item).addClass('addon-controlable');
+								jQuery(item).addClass('addon-controlable').effect('highlight',{},500,function(){jQuery(this).show()});
 								jQuery('#spinner-addon-height-value').val(jQuery(item).height());
 								jQuery('#spinner-addon-width-value').val(jQuery(item).width());
 							});

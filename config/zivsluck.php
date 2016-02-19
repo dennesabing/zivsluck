@@ -15,6 +15,15 @@
  */
 return [
 	'zivsluck' => [
+		'promotion' => [
+			'enable' => true,
+			'discount' => 100
+		],
+		'price' => [
+			'stainless' => 250,
+			'goldplated' => 499,
+			'silver' => 700
+		],
 		'checkout' => [
 			'enable' => env('ZIVSLUCK_CHECKOUT', false),
 		],
@@ -102,6 +111,10 @@ return [
 			],
 			'order' => [
 				'name' => Zivsluck\Http\Controllers\__FRAMEWORK__\OrderController::class,
+				'enable' => true
+			],
+			'promo' => [
+				'name' => Zivsluck\Http\Controllers\__FRAMEWORK__\PromoController::class,
 				'enable' => true
 			],
 			'maintenance' => [
@@ -202,6 +215,15 @@ return [
 				'enable' => true
 			],
 			'url' => '/update-order',
+			'enable' => true
+		],
+		'promo' => [
+			'controller' => [
+				'name' => 'promo',
+				'method' => 'index',
+				'enable' => true
+			],
+			'url' => '/promo',
 			'enable' => true
 		],
 	]

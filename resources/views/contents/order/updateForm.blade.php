@@ -18,6 +18,11 @@
 		Make a copy (take a shot using your phone camera or scan it) of the deposit or payment slip and indicate on the slip
 		the ORDER ID that the payment is intended for.
 	</p>
+	<p>
+		If you paid once for multiple orders, make a copy of the deposit/payment slip and write all the Order IDs on it
+		and update each order with the correspoding amount intended for each order.
+		Also, you have to upload a copy of the deposit/slip for each order update.
+	</p>
 	<div class="row">
 		<div class="col-md-12">
 			<form method="post" action="<?php echo zbase_url_from_route('orderUpdate'); ?>" enctype="multipart/form-data">

@@ -12,7 +12,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 			<li>Once payment has been made, please send us a copy of the deposit slip as Proof of Payment.</li>
 			<li>You can send to us the deposit/payment slip using the Update Order page at
 				<a target="_blank" href="<?php echo zbase_url_from_route('orderUpdate')?>">http://zivsluck.com/update-order</a>.</li>
-			<li><strong>No Proof of Payment, No Order Processing.</strong></li>
+			<li><strong>No Proof of Payment, No Processing of Order.</strong></li>
 			<li>No cancellation of order once payment has been made.</li>
 			<li>No rush orders</li>
 		</ul>
@@ -51,9 +51,15 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	function zivsluck_confirmOrder()
 	{
 		var agreement = jQuery('#agreement');
+		var orderChecked = jQuery('#order_checked');
 		if (jQuery('input[name="agreement"]:checked').length < 1)
 		{
 			agreement.closest('div.checkbox').addClass('has-error');
+			return;
+		}
+		if (jQuery('input[name="order_checked"]:checked').length < 1)
+		{
+			orderChecked.closest('div.checkbox').addClass('has-error');
 			return;
 		}
 		jQuery('#step').val(5);

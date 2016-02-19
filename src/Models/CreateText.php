@@ -175,22 +175,7 @@ class CreateText
 			}
 		}
 
-		$price = zbase_config_get('zivsluck.fontmaps.' . $font . '.material.' . $material . '.price', false);
-		if(empty($price))
-		{
-			if($material == 'stainless')
-			{
-				$price = 350;
-			}
-			elseif($material == 'silver')
-			{
-				$price = 700;
-			}
-			else
-			{
-				$price = 700;
-			}
-		}
+		$price = zbase_config_get('zivsluck.price.' . $material, false);
 
 		$fontSize = 30; // font size
 		$chars = 30;
@@ -247,6 +232,7 @@ class CreateText
 			$brandingHeightPosition = 200;
 		}
 
+		// <editor-fold defaultstate="collapsed" desc="Image Printin">
 		/**
 		 * Read the TTF file and get the width and height of our font.
 		 */
@@ -265,7 +251,7 @@ class CreateText
 			// Canvass
 			$bgTexture = imagecreatetruecolor($boxWidth - ($borderWidth * 2), $boxHeight - ($borderWidth * 2));
 			// Background Color
-			$white = imagecolorallocate($bgTexture, 255, 255, 204);
+			$white = imagecolorallocate($bgTexture, 255, 255, 255);
 		}
 		/**
 		 * Create text on a white background
@@ -332,7 +318,8 @@ class CreateText
 			// Add border
 			imagefilltoborder($img, 1, 1, $textColorBlack, $white);
 		}
-
+		// </editor-fold>
+		// <editor-fold defaultstate="collapsed" desc="ADDON">
 		$totalAddon = 0;
 		if(!empty($options['addon']))
 		{
@@ -351,9 +338,17 @@ class CreateText
 					$addonFile = zivsluck()->path() . 'resources/assets/img/addons/' . zbase_config_get('zivsluck.addons.' . $addonName . '.file');
 					$addonPosition = !empty($addon[1]) ? explode(',', $addon[1]) : false;
 					$addonSize = !empty($addon[2]) ? explode('x', $addon[2]) : false;
+					$addonRotate = intval(!empty($addon[3]) ? $addon[3] : false);
 					if(!empty($addonEnabled) && file_exists($addonFile))
 					{
 						$addonFile = imagecreatefrompng($addonFile);
+						//if(!empty($addonRotate))
+						{
+							$addonFile = imagerotate($addonFile, 360 - $addonRotate, imageColorAllocateAlpha($addonFile, 0, 0, 0, 127));
+							//$im = imagerotate($im, $angle, -1);
+							//imagealphablending($addonFile, true);
+							//imagesavealpha($addonFile, true);
+						}
 						if(empty($addonSize[0]))
 						{
 							$addonSize[0] = imagesx($addonFile);
@@ -371,12 +366,47 @@ class CreateText
 				}
 			}
 		}
-//		die;
-		/**
-		 * Label
-		 */
+		// </editor-fold>
+		// <editor-fold defaultstate="collapsed" desc="Checkout Details">
 		if($hasDetails)
 		{
+			// <editor-fold defaultstate="collapsed" desc="DISCOUNT">
+			$discountInPrice = zbase_config_get('promotion.price', 0.00);
+			if(!empty($orderData) && !empty($options['final']))
+			{
+				$promo = !empty($options['promo_flag']) ? true : false;
+				if(!empty($promo))
+				{
+					$discountInPrice = $options['promo_discountprice'];
+					$shippingFee = $options['promo_shipping_fee'];
+					$associateOrderId = $options['promo_associate_order_id'];
+				}
+				else
+				{
+					if(!empty($options['promo_associate_order_id']))
+					{
+						$associateOrderId = $options['promo_associate_order_id'];
+					}
+				}
+			}
+			else
+			{
+				$promo = $this->_discountOnNextOrder($text, $font, $material, $options);
+				$options['promo_flag'] = 0;
+				if(!empty($promo))
+				{
+					$promoOrder = $promo;
+					$promo = true;
+					$options['promo_flag'] = 1;
+					$shippingFee = 0.00;
+					$options['promo_discountprice'] = $discountInPrice;
+					$options['promo_shipping_fee'] = $shippingFee;
+					$options['promo_associate_order_id'] = $promoOrder->id();
+					$associateOrderId = $promoOrder->id();
+				}
+			}
+			// </editor-fold>
+
 			if(empty($dealerCopy))
 			{
 				$chainImage = imagecreatefrompng($chainImage);
@@ -403,6 +433,10 @@ class CreateText
 					$subTotal += $addonPrice;
 				}
 				$total += $shippingFee;
+				if(!empty($promo))
+				{
+					$total -= $discountInPrice;
+				}
 				if(!empty($orderData))
 				{
 					imagettftext($img, 12, 0, 15, 180, $textColorBlack, $verdanaFont, 'ORDER ID: ' . $orderData->maskedId());
@@ -438,8 +472,19 @@ class CreateText
 				imagettftext($img, 9, 0, 15, 460, $textColorBlack, $verdanaFont, 'Symbols: Php ' . number_format($addonPrice, 2));
 				if($hasShipping)
 				{
-					imagettftext($img, 9, 0, 15, 480, $textColorBlack, $verdanaFont, 'Shipping: Php ' . number_format($shippingFee, 2));
-					imagettftext($img, 9, 0, 15, 495, $textColorBlack, $verdanaFont, 'Courier: ' . $courierText);
+					imagettftext($img, 9, 0, 15, 475, $textColorBlack, $verdanaFont, 'Shipping: Php ' . number_format($shippingFee, 2));
+					imagettftext($img, 9, 0, 15, 490, $textColorBlack, $verdanaFont, 'Courier: ' . $courierText);
+					if(!empty($promo))
+					{
+						imagettftext($img, 9, 0, 15, 505, $textColorBlack, $verdanaFont, 'Discount: ' . number_format($discountInPrice, 2) . ' (Order#' . $associateOrderId . ')');
+					}
+					else
+					{
+						if(!empty($associateOrderId))
+						{
+							imagettftext($img, 9, 0, 15, 505, $textColorBlack, $verdanaFont, 'Associate Order Id: ' . $associateOrderId);
+						}
+					}
 					imagettftext($img, 9, 0, 15, 580, $textColorBlack, $verdanaFont, 'Shipping Information:');
 					imagettftext($img, 9, 0, 15, 600, $textColorBlack, $verdanaFont, $options['shippingFirstName'] . ' ' . $options['shippingLastName']);
 					imagettftext($img, 9, 0, 15, 615, $textColorBlack, $verdanaFont, $options['address']);
@@ -458,7 +503,7 @@ class CreateText
 					}
 					imagettftext($img, 8, 0, 15, 760, $textColorBlack, $verdanaFont, 'Date: ' . date('F d, Y h:i A'));
 				}
-				imagettftext($img, 18, 0, 15, 535, $textColorBlack, $verdanaFont, 'Total: Php ' . number_format($total, 2));
+				imagettftext($img, 18, 0, 15, 540, $textColorBlack, $verdanaFont, 'Total: Php ' . number_format($total, 2));
 				if(!empty($statusPaid))
 				{
 					imagettftext($img, 9, 0, 15, 555, $textColorBlack, $verdanaFont, 'PAID ' . number_format($paymentAmount, 2) . ' via ' . $paymentCenterName . ' (' . $orderData->paid_date_at->format('m/d/Y') . ')');
@@ -468,7 +513,22 @@ class CreateText
 					$orderData->total = $total;
 					$orderData->subtotal = $subTotal;
 					$orderData->shipping_fee = $shippingFee;
+					unset($options['step']);
+					$options['final'] = 1;
+					if(!empty($promoOrder))
+					{
+						$orderData->promo_flag = 1;
+					}
+					$orderData->details = json_encode($options);
 					$orderData->save();
+					if(!empty($promoOrder))
+					{
+						$promoOrderDetails = (array) $promoOrder->details();
+						$promoOrderDetails['promo_associate_order_id'] = $orderData->id();
+						$promoOrder->details = json_encode($promoOrderDetails);
+						$promoOrder->promo_flag = 1;
+						$promoOrder->save();
+					}
 				}
 			}
 		}
@@ -497,9 +557,53 @@ class CreateText
 				imagecopy($img, $paymentDetailsIm, 0, 800, 0, 0, $boxWidth, $boxHeight);
 			}
 		}
+		// </editor-fold>
 
+		/**
+		 * Label
+		 */
 		$this->_image = $img;
 		return $this;
+	}
+
+	/**
+	 * Php 100.00 discount on next order
+	 * Mechanics for discount to be valid:
+	 *  Next order should be of the same material as the first order.
+	 *  First Name and Last Name should be the same from the first order.
+	 *  Next order should be delivered on the same address as the first order.
+	 *  Next order should be done within the day or in the next 24 hours since the first order was made.
+	 *  Discount can only be used on the next order.
+	 *  Discount will be reflected on the Order Confirmation page.
+	 *
+	 * @param string $text
+	 * @param string $font
+	 * @param string $material
+	 * @param array $options
+	 * @return boolean
+	 */
+	protected function _discountOnNextOrder($text, $font, $material, $options)
+	{
+		$enable = zivsluck_promotion();
+		if(empty($enable))
+		{
+			return false;
+		}
+		if(!empty($options['first_name']) && !empty($options['last_name']))
+		{
+			$ownerName = $options['first_name'] . ' ' . $options['last_name'];
+			$shippingAddress = $options['address'] . ' ' . $options['addressb'] . ', ' . $options['city'];
+			$orderEntity = zbase_entity('custom_orders')->repository()->setDebug(false)->all(['*'], ['name' => $ownerName, 'material' => $material, 'promo_flag' => 0], ['order_id' => 'asc']);
+			if(!empty($orderEntity->count()))
+			{
+				$orderEntity = $orderEntity->first();
+				if($orderEntity->shippingAddress() == $shippingAddress && zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()) && $orderEntity->material == $material)
+				{
+					return $orderEntity;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
