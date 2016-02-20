@@ -12,6 +12,16 @@ ob_start('zbase_remove_whitespaces');
 		<meta name="MobileOptimized" content="320" />
 		<link href="/zbase/assets/zivsluck/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
 		<link href="/zbase/assets/zivsluck/css/zivsluck.css" rel="stylesheet" />
+
+		<meta property="og:url"                content="http://zivsluck.com" />
+		<meta property="og:type"               content="website" />
+		<meta property="og:title"              content="Create your own necklace" />
+		<meta property="og:site_name"              content="Personalized Necklace by ZivsLuck" />
+		<meta property="og:description"        content="Personalized Necklaces by Zivsluck made from High Quality Stainless, Silver and Gold! Customized design, create now!" />
+		<meta property="og:image"              content="http://zivsluck.com/zbase/assets/zivsluck/img/zivsluckBig.png" />
+		<meta property="fb:app_id"              content="1020997414620227" />
+
+
 		<?php if(empty(zbase_is_dev())): ?>
 			<script>
 				(function (i, s, o, g, r, a, m) {
@@ -33,7 +43,6 @@ ob_start('zbase_remove_whitespaces');
 		@yield('head_bottom')
 	</head>
 	<body class="{{ implode(' ',zbase_view_placeholder('body_class')) }}">
-
 		<div class="container-fluid">
 			<div class="row" style="padding-bottom:20px;">
 				<div class="col-md-6">
