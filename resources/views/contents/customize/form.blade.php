@@ -217,7 +217,7 @@ if(empty($checkout))
 			data = {chain: chain, chainLength: chainLength};
 		}
 		$.ajax({
-			type: 'get',
+			type: 'post',
 			url: '<?php echo zbase_url_from_route('create') ?>/' + text + '/' + font + '/' + material,
 			data: data,
 			beforeSend: function () {
