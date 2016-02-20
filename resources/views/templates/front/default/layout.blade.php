@@ -36,8 +36,17 @@ ob_start('zbase_remove_whitespaces');
 
 		<div class="container-fluid">
 			<div class="row" style="padding-bottom:20px;">
-				<div class="col-md-12">
+				<div class="col-md-6">
 					<a href="/" title="ZivsLuck" class="logo">ZivsLuck</a>
+				</div>
+				<div class="col-md-6">
+					<?php
+					if(zivsluck_promotion())
+					{
+						?>
+						<a href="/promo" title="View promo details"><img src="/zbase/assets/zivsluck/img/promo/100off.png" alt="100.00 Off on your next order" class="img-shadow img-responsive"></a>
+						<br />
+					<?php } ?>
 				</div>
 			</div>
 			{!! zbase_alerts_render() !!}

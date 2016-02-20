@@ -10,8 +10,6 @@ if(zbase_is_dev())
 ?>
 <div id="customizeForm">
 	<h1>Create your own necklace!</h1>
-	<a href="/promo" title="View promo details"><img src="/zbase/assets/zivsluck/img/promo/100off.png" alt="100.00 Off on your next order" class="img-shadow img-responsive"></a>
-	<br />
 	<div class="form-group" id="form-group-name">
 		<label for="name">Type the name to view your name on any font</label>
 		<input type="text" required="required" minlength="1" class="form-control" id="name" value="<?php echo!empty($dataCustomize['name']) ? $dataCustomize['name'] : '' ?>" name="name" placeholder="Type your name" />

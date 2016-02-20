@@ -191,7 +191,7 @@ return [
 			'monogram4' => [
 				'name' => 'Monogram 4',
 				'file' => 'monogram4.png',
-				'enable' => true,
+				'enable' => false,
 				'displayWidth' => '64',
 				'displayHeight' => '32',
 			],

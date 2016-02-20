@@ -16,7 +16,7 @@
 return [
 	'zivsluck' => [
 		'promotion' => [
-			'enable' => true,
+			'enable' => env('ZIVSLUCK_PROMOTION', false),
 			'discount' => 100
 		],
 		'price' => [
@@ -119,6 +119,10 @@ return [
 			],
 			'maintenance' => [
 				'name' => Zivsluck\Http\Controllers\__FRAMEWORK__\MaintenanceController::class,
+				'enable' => true
+			],
+			'site' => [
+				'name' => Zivsluck\Http\Controllers\__FRAMEWORK__\SiteController::class,
 				'enable' => true
 			],
 		],
@@ -224,6 +228,15 @@ return [
 				'enable' => true
 			],
 			'url' => '/promo',
+			'enable' => true
+		],
+		'site/addons/list' => [
+			'controller' => [
+				'name' => 'site',
+				'method' => 'addonsList',
+				'enable' => true
+			],
+			'url' => '/site/addons/list',
 			'enable' => true
 		],
 	]

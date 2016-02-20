@@ -77,6 +77,7 @@ class CreateText
 			}
 			$this->setOrderData($orderData);
 		}
+		$tags = [];
 		$dealerCopy = !empty($options['dealerCopy']) ? true : false;
 		/**
 		 * <span id="IL_AD8" class="IL_AD">Setup</span> some custom variables for creating our font and image.
@@ -109,6 +110,7 @@ class CreateText
 			$brandingHeightPosition = 600;
 			$chainFile = zbase_config_get('zivsluck.chains.' . strtolower($material) . '.' . strtolower($chain) . '.file', false);
 			$chainImage = zbase_public_path() . '/zbase/assets/zivsluck/img/chain/' . $chainFile;
+			$tags[] = $chain;
 		}
 
 		$letterPrice = 0;
@@ -185,19 +187,15 @@ class CreateText
 		$logo = zivsluck()->path() . 'resources/assets/img/texture/logo.png'; // the texture file
 		$paymentDetails = zivsluck()->path() . 'resources/assets/img/payments/bayadCenter.png'; // the texture file
 		$fontDetails = $this->getFontDetails();
+		$tags[] = $material;
+		$tags[] = $font;
 
 		if(!empty($dealerCopy))
 		{
 			$boxWidth = 280;
-			$boxHeight = 350;
-			$brandingHeightPosition = 350;
-			$posYDiff = -75;
-			if(!empty($customerNote))
-			{
-				$boxHeight = 500;
-				$brandingHeightPosition = 500;
-				$posYDiff = 0;
-			}
+			$boxHeight = 500;
+			$brandingHeightPosition = 500;
+			$posYDiff = 0;
 		}
 
 		/**
@@ -328,6 +326,7 @@ class CreateText
 			$addonDroppableHeight = zbase_config_get('zivsluck.addons.configuration.droppable.height');
 			$addonDroppableWidth = zbase_config_get('zivsluck.addons.configuration.droppable.width');
 			$addons = explode('|', $options['addon']);
+			$includedAddons = [];
 			foreach ($addons as $addon)
 			{
 				if(!empty($addon))
@@ -341,13 +340,17 @@ class CreateText
 					$addonRotate = intval(!empty($addon[3]) ? $addon[3] : false);
 					if(!empty($addonEnabled) && file_exists($addonFile))
 					{
+						if(!in_array($addonName, $tags))
+						{
+							$tags[] = $addonName;
+						}
+						$includedAddons[] = $addonName;
+						$addonNewImage = imagecreatetruecolor($addonSize[0], $addonSize[1]);
+						$transparent = imagecolorallocatealpha($addonNewImage, 0, 0, 0, 127);
 						$addonFile = imagecreatefrompng($addonFile);
-						//if(!empty($addonRotate))
+						if(!empty($addonRotate))
 						{
 							$addonFile = imagerotate($addonFile, 360 - $addonRotate, imageColorAllocateAlpha($addonFile, 0, 0, 0, 127));
-							//$im = imagerotate($im, $angle, -1);
-							//imagealphablending($addonFile, true);
-							//imagesavealpha($addonFile, true);
 						}
 						if(empty($addonSize[0]))
 						{
@@ -357,9 +360,8 @@ class CreateText
 						{
 							$addonSize[1] = imagesy($addonFile);
 						}
-						$addonNewImage = imagecreatetruecolor($addonSize[0], $addonSize[1]);
-						imagealphablending($addonNewImage, false);
-						imagecopyresized($addonNewImage, $addonFile, 0, 0, 0, 0, $addonSize[0], $addonSize[1], imagesx($addonFile), imagesy($addonFile));
+						imagefill($addonNewImage, 0, 0, $transparent);
+						imagecopyresampled($addonNewImage, $addonFile, 0, 0, 0, 0, $addonSize[0], $addonSize[1], imagesx($addonFile), imagesy($addonFile));
 						$totalAddon++;
 						imagecopy($img, $addonNewImage, $addonPosition[0] + $addonDroppableLeft, $addonPosition[1] + $addonDroppableTop, 0, 0, $addonSize[0], $addonSize[1]);
 					}
@@ -451,10 +453,15 @@ class CreateText
 				imagettftext($img, 9, 0, 25, 240, $textColorBlack, $verdanaFont, 'Material: ' . ucfirst($material));
 				imagettftext($img, 9, 0, 25, 260, $textColorBlack, $verdanaFont, 'Chain: ' . strtoupper($chain));
 				imagettftext($img, 9, 0, 25, 280, $textColorBlack, $verdanaFont, 'Chain Length: ' . $chainLength . '"');
+				if(!empty($includedAddons))
+				{
+					imagettftext($img, 8, 0, 25, 300, $textColorBlack, $verdanaFont, 'Included Addons:');
+					imagettftext($img, 8, 0, 25, 320, $textColorBlack, $verdanaFont, wordwrap(implode(', ', $includedAddons),30));
+				}
 				if(!empty($customerNote))
 				{
-					imagettftext($img, 9, 0, 25, 300, $textColorBlack, $verdanaFont, 'Customer Note:');
-					imagettftext($img, 8, 0, 25, 320, $textColorBlack, $verdanaFont, wordwrap($customerNote, 40));
+					imagettftext($img, 9, 0, 25, 360, $textColorBlack, $verdanaFont, 'Customer Note:');
+					imagettftext($img, 8, 0, 25, 380, $textColorBlack, $verdanaFont, wordwrap($customerNote, 40));
 				}
 			}
 			else
@@ -520,6 +527,10 @@ class CreateText
 						$orderData->promo_flag = 1;
 					}
 					$orderData->details = json_encode($options);
+					if(!empty($tags))
+					{
+						$orderData->tags = implode(', ', $tags);
+					}
 					$orderData->save();
 					if(!empty($promoOrder))
 					{

@@ -219,6 +219,7 @@ return [
 						'label' => 'Details',
 						'hidden' => false,
 						'fillable' => true,
+						'json' => true,
 						'type' => 'text',
 						'comment' => 'The order details'
 					],
@@ -303,6 +304,17 @@ return [
 						'type' => 'boolean',
 						'nullable' => true,
 						'comment' => 'Promo Eligibility Flag'
+					],
+					'tags' => [
+						'filterable' => [
+							'name' => 'tags',
+							'enable' => true
+						],
+						'label' => 'Tags',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'text',
+						'comment' => 'Tags'
 					],
 				]
 			]

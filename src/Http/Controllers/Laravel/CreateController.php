@@ -21,13 +21,6 @@ class CreateController extends Controller
 
 	public function index()
 	{
-		$ownerName = 'Dennes Abing';//$options['first_name'] . ' ' . $options['last_name'];
-		$material = 'stainless';
-		//$address = $options['address'] . ' ' . $options['addressb'] . ' ' . $options['city'];
-		$orderEntity = zbase_entity('custom_orders')->repository()->by(['name', 'material'], [$ownerName, $material]);
-		// dd($orderEntity->first()->shippingAddress());
-		// dd($orderEntity->first()->created_at);
-		// dd(zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()));
 		return $this->view(zbase_view_file('create.customize'));
 	}
 
