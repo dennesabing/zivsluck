@@ -167,7 +167,7 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			$post_fields = array(
 				'chat_id' => $shane,
 				'photo' => new \CURLFile(realpath($image)),
-				'caption' => 'New Order from ' . $this->name . ' with Order ID: ' . $this->maskedId()
+				'caption' => 'New Order from ' . $this->name . ' with Order ID: ' . $this->maskedId() . ' Date Ordered: ' . $this->created_at->format('F d, Y, h:i:s A')
 			);
 
 			$ch = curl_init();
@@ -190,7 +190,7 @@ class Order extends BaseEntity implements Interfaces\IdInterface
 			$post_fields = array(
 				'chat_id' => $shane,
 				'photo' => new \CURLFile(realpath($image)),
-				'caption' => 'Dealer\'s copy for Order from ' . $this->name . ' with Order ID: ' . $this->maskedId()
+				'caption' => 'Dealer\'s copy for Order from ' . $this->name . ' with Order ID: ' . $this->maskedId() . ' Date Ordered: ' . $this->created_at->format('F d, Y, h:i:s A')
 			);
 
 			$ch = curl_init();

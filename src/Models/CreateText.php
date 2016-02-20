@@ -416,24 +416,41 @@ class CreateText
 				$subTotal = $price;
 				$letterCount = strlen($text);
 				$addonPrice = 0;
-				if($letterCount < $maxLetter)
+				$totalCharacters = ($letterCount + $totalAddon);
+				if($totalCharacters > $maxLetter)
 				{
-					if(!empty($totalAddon))
+					if($letterCount > $maxLetter)
 					{
-						$addonCount = ($letterCount + $totalAddon) - $maxLetter;
-						$addonPrice = $addonCount * 20;
-						$total += $addonPrice;
-						$subTotal += $addonPrice;
+						if(!empty($totalAddon))
+						{
+							$addonCount = ($letterCount + $totalAddon) - $maxLetter;
+							$addonPrice = $addonCount * 20;
+							$total += $addonPrice;
+							$subTotal += $addonPrice;
+						}
+					} else {
+						$totalAddon = $totalCharacters - $maxLetter;
+						$addonPrice = $totalAddon * 20;
 					}
 				}
-				if($letterCount > $maxLetter)
-				{
-					$letterPrice = ($letterCount - $maxLetter) * 20;
-					$total += $letterPrice;
-					$addonPrice = $totalAddon * 20;
-					$total += $addonPrice;
-					$subTotal += $addonPrice;
-				}
+//				if($letterCount < $maxLetter)
+//				{
+//					if(!empty($totalAddon))
+//					{
+//						$addonCount = ($letterCount + $totalAddon) - $maxLetter;
+//						$addonPrice = $addonCount * 20;
+//						$total += $addonPrice;
+//						$subTotal += $addonPrice;
+//					}
+//				}
+//				if($letterCount > $maxLetter)
+//				{
+//					$letterPrice = ($letterCount - $maxLetter) * 20;
+//					$total += $letterPrice;
+//					$addonPrice = $totalAddon * 20;
+//					$total += $addonPrice;
+//					$subTotal += $addonPrice;
+//				}
 				$total += $shippingFee;
 				if(!empty($promo))
 				{

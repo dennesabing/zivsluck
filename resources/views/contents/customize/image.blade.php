@@ -1,4 +1,5 @@
 <?php
+
 $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 if(empty($create))
 {
@@ -44,6 +45,10 @@ if(empty($create))
 						];
 						$orderData = zbase_entity('custom_orders')->create($data);
 						$options['oid'] = $orderData->maskedId();
+					}
+					foreach ($options as $oK => $oV)
+					{
+						zbase_cookie_make($oK, $oV, 5*60);
 					}
 				}
 				$url = zbase_url_from_route('createImage', compact('name', 'font', 'material')) . '?' . zbase_url_array_to_get($options);

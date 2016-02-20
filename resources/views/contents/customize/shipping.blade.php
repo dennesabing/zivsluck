@@ -1,19 +1,16 @@
 <?php
 $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 $dataShipping = [];
-if(zbase_is_dev())
-{
-	$dataShipping = [
-		'first_name' => 'Dennes',
-		'last_name' => 'Abing',
-		'email' => 'dennes.b.abing@gmail.com',
-		'fb' => 'http://facebook.com/dennesabing',
-		'phone' => '09257995993',
-		'address' => 'Lot 41, Block 10, Phase 8',
-		'addressb' => 'Deca Homes, Tacunan, Mintal',
-		'city' => 'Davao City',
-	];
-}
+$dataShipping = [
+	'first_name' => zbase_cookie('first_name', ''),
+	'last_name' => zbase_cookie('last_name', ''),
+	'email' => zbase_cookie('email', ''),
+	'fb' => zbase_cookie('fb', ''),
+	'phone' => zbase_cookie('phone', ''),
+	'address' => zbase_cookie('address', ''),
+	'addressb' => zbase_cookie('addressb', ''),
+	'city' => zbase_cookie('city', ''),
+];
 ?>
 <div id="shippingForm" style="display: none;">
 	<h1>Order Information</h1>
@@ -104,6 +101,8 @@ if(zbase_is_dev())
 			KCC Mall 2:00 PM to 3:00 PM (Saturdays and Sundays only)
 		</p>
 	</div>
+	<hr />
+	<br />
 	<button id="btnShippingConfirmCancel" class="btn btn-danger">Cancel Order</button>
 	<button id="btnShippingConfirm" class="btn btn-success">Next, Confirm Order</button>
 </div>
@@ -112,128 +111,128 @@ if(zbase_is_dev())
 </style>
 @append
 @section('body_bottom')
-<?php if(!empty($checkout)):?>
-<script type="text/javascript">
+<?php if(!empty($checkout)): ?>
+	<script type="text/javascript">
 
-	function zivsluck_shippingProcess()
-	{
-		jQuery('#shippingForm').show();
-		jQuery('#customizeForm').hide();
-		jQuery('#showCustom').hide();
-		jQuery('#addonsForm').hide();
-		jQuery('#btnCheckoutNecklace').hide();
-		scroll(0, 0);
-		jQuery('#step').val(3);
-		jQuery('#btnAddOnsBack').hide();
-		zivsluck_load();
-	}
-	jQuery(document).ready(function () {
-		if ($("#meetUpRadio").is(":checked")) {
-			console.log('MeetUp Checked');
-		}
-		jQuery('#city').blur(function () {
-			var city = jQuery('#city').val();
-			var meetupsCity = new Array('Davao', 'Davao City', 'General Santos', 'General Santos City', 'Gensan City', 'Gensan', 'Gen. Santos City', 'Gen. Santos');
-			jQuery('#label-deliveryMode-meetUp').hide();
-			jQuery('#meetUpsInfo').hide();
-		});
-		zbase_event_checkbox('#shippingSame', 'change', function (e) {
-			if (!empty(zbase_get_checkbox_value('#shippingSame')))
-			{
-				jQuery('#shippingNamesWrapper').show();
-				jQuery('.shipping_last_name').attr('required', true).val('');
-				jQuery('.shipping_first_name').attr('required', true).val('');
-			} else {
-				jQuery('#shippingNamesWrapper').hide();
-				jQuery('.shipping_last_name').attr('required', false).val('');
-				jQuery('.shipping_first_name').attr('required', false).val('');
-			}
-		});
-
-		jQuery('#btnShippingConfirmCancel').click(function (e) {
-			e.preventDefault();
-			jQuery('#shippingForm').hide();
-			jQuery('#customizeForm').show();
-			jQuery('#showCustom').show();
+		function zivsluck_shippingProcess()
+		{
+			jQuery('#shippingForm').show();
+			jQuery('#customizeForm').hide();
+			jQuery('#showCustom').hide();
 			jQuery('#addonsForm').hide();
-			jQuery('#step').val(1);
-			zivsluck_load();
-			addon = '';
-		});
-		jQuery('#btnShippingConfirm').click(function (e) {
-			e.preventDefault();
-			var fName = jQuery('#first_name');
-			var lName = jQuery('#last_name');
-			var city = jQuery('#city');
-			var courier = jQuery('input[name="courier"]');
-			var dMode = jQuery('input[name="deliveryMode"]');
-			var address = jQuery('#address');
-			var addressb = jQuery('#addressb');
-			var phone = jQuery('#phone');
-			var fb = jQuery('#fb');
-			var shippingFirstName = jQuery('#shipping_first_name');
-			var shippingLastName = jQuery('#shipping_last_name');
-			if (!empty(zbase_get_checkbox_value('#shippingSame')))
-			{
-				if (shippingFirstName.val() == '')
-				{
-					shippingFirstName.closest('.form-group').addClass('has-error');
-					return;
-				}
-				if (shippingLastName.val() == '')
-				{
-					shippingLastName.closest('.form-group').addClass('has-error');
-					return;
-				}
-			}
-			if (fName.val() == '')
-			{
-				fName.closest('.form-group').addClass('has-error');
-				return;
-			}
-			if (lName.val() == '')
-			{
-				lName.closest('.form-group').addClass('has-error');
-				return;
-			}
-			if (phone.val() == '')
-			{
-				phone.closest('.form-group').addClass('has-error');
-				return;
-			}
-			if (courier.filter(':checked').val() === undefined)
-			{
-				courier.closest('.radio').addClass('has-error');
-				return;
-			}
-			if (dMode.filter(':checked').val() === undefined)
-			{
-				dMode.closest('.radio').addClass('has-error');
-				return;
-			}
-			if (address.val() == '')
-			{
-				address.closest('.form-group').addClass('has-error');
-				return;
-			}
-			if (addressb.val() == '')
-			{
-				addressb.closest('.form-group').addClass('has-error');
-				return;
-			}
-			if (city.val() == '')
-			{
-				city.closest('.form-group').addClass('has-error');
-				return;
-			}
-			jQuery('#step').val(4);
-			jQuery('#confirmOrderForm').show();
-			jQuery('#shippingForm').hide();
-			jQuery('#showCustom').show();
+			jQuery('#btnCheckoutNecklace').hide();
 			scroll(0, 0);
+			jQuery('#step').val(3);
+			jQuery('#btnAddOnsBack').hide();
 			zivsluck_load();
+		}
+		jQuery(document).ready(function () {
+			if ($("#meetUpRadio").is(":checked")) {
+				console.log('MeetUp Checked');
+			}
+			jQuery('#city').blur(function () {
+				var city = jQuery('#city').val();
+				var meetupsCity = new Array('Davao', 'Davao City', 'General Santos', 'General Santos City', 'Gensan City', 'Gensan', 'Gen. Santos City', 'Gen. Santos');
+				jQuery('#label-deliveryMode-meetUp').hide();
+				jQuery('#meetUpsInfo').hide();
+			});
+			zbase_event_checkbox('#shippingSame', 'change', function (e) {
+				if (!empty(zbase_get_checkbox_value('#shippingSame')))
+				{
+					jQuery('#shippingNamesWrapper').show();
+					jQuery('.shipping_last_name').attr('required', true).val('');
+					jQuery('.shipping_first_name').attr('required', true).val('');
+				} else {
+					jQuery('#shippingNamesWrapper').hide();
+					jQuery('.shipping_last_name').attr('required', false).val('');
+					jQuery('.shipping_first_name').attr('required', false).val('');
+				}
+			});
+
+			jQuery('#btnShippingConfirmCancel').click(function (e) {
+				e.preventDefault();
+				jQuery('#shippingForm').hide();
+				jQuery('#customizeForm').show();
+				jQuery('#showCustom').show();
+				jQuery('#addonsForm').hide();
+				jQuery('#step').val(1);
+				zivsluck_load();
+				addon = '';
+			});
+			jQuery('#btnShippingConfirm').click(function (e) {
+				e.preventDefault();
+				var fName = jQuery('#first_name');
+				var lName = jQuery('#last_name');
+				var city = jQuery('#city');
+				var courier = jQuery('input[name="courier"]');
+				var dMode = jQuery('input[name="deliveryMode"]');
+				var address = jQuery('#address');
+				var addressb = jQuery('#addressb');
+				var phone = jQuery('#phone');
+				var fb = jQuery('#fb');
+				var shippingFirstName = jQuery('#shipping_first_name');
+				var shippingLastName = jQuery('#shipping_last_name');
+				if (!empty(zbase_get_checkbox_value('#shippingSame')))
+				{
+					if (shippingFirstName.val() == '')
+					{
+						shippingFirstName.closest('.form-group').addClass('has-error');
+						return;
+					}
+					if (shippingLastName.val() == '')
+					{
+						shippingLastName.closest('.form-group').addClass('has-error');
+						return;
+					}
+				}
+				if (fName.val() == '')
+				{
+					fName.closest('.form-group').addClass('has-error');
+					return;
+				}
+				if (lName.val() == '')
+				{
+					lName.closest('.form-group').addClass('has-error');
+					return;
+				}
+				if (phone.val() == '')
+				{
+					phone.closest('.form-group').addClass('has-error');
+					return;
+				}
+				if (courier.filter(':checked').val() === undefined)
+				{
+					courier.closest('.radio').addClass('has-error');
+					return;
+				}
+				if (dMode.filter(':checked').val() === undefined)
+				{
+					dMode.closest('.radio').addClass('has-error');
+					return;
+				}
+				if (address.val() == '')
+				{
+					address.closest('.form-group').addClass('has-error');
+					return;
+				}
+				if (addressb.val() == '')
+				{
+					addressb.closest('.form-group').addClass('has-error');
+					return;
+				}
+				if (city.val() == '')
+				{
+					city.closest('.form-group').addClass('has-error');
+					return;
+				}
+				jQuery('#step').val(4);
+				jQuery('#confirmOrderForm').show();
+				jQuery('#shippingForm').hide();
+				jQuery('#showCustom').show();
+				scroll(0, 0);
+				zivsluck_load();
+			});
 		});
-	});
-</script>
-<?php endif;?>
+	</script>
+<?php endif; ?>
 @append
