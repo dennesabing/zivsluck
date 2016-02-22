@@ -637,10 +637,11 @@ class CreateText
 						return false;
 					}
 				}
-				if($orderEntity->shippingAddress() == $shippingAddress && zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()))
-				{
+				//if($orderEntity->shippingAddress() == $shippingAddress && zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()))
+				//if(zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()))
+				//{
 					return $orderEntity;
-				}
+				//}
 			}
 		}
 		return false;
