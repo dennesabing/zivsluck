@@ -239,5 +239,35 @@ return [
 			'url' => '/site/addons/list',
 			'enable' => true
 		],
+		'siteImages' => [
+			'controller' => [
+				'name' => 'site',
+				'method' => 'images',
+				'enable' => true
+			],
+			'url' => '/site/images',
+			'enable' => true
+		],
+		'siteImageUpload' => [
+			'controller' => [
+				'name' => 'site',
+				'method' => 'upload',
+				'enable' => true
+			],
+			'form' => [
+				'enable' => true
+			],
+			'url' => '/site/image/upload',
+			'enable' => true
+		],
+		'siteImageWatermark' => [
+			'controller' => [
+				'name' => 'site',
+				'method' => 'watermark',
+				'enable' => true
+			],
+			'url' => '/site/i/w/{f?}',
+			'enable' => true
+		],
 	]
 ];

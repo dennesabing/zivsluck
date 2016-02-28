@@ -15,6 +15,128 @@
  */
 return [
 	'entity' => [
+		'images' => [
+			'enable' => true,
+			'model' => Zivsluck\Entity\__FRAMEWORK__\Image::class,
+			'table' => [
+				'name' => 'z_images',
+				'primaryKey' => 'img_id',
+				'timestamp' => true,
+				'softDelete' => true,
+				'description' => 'Images',
+				'columns' => [
+					'img_id' => [
+						'filterable' => [
+							'name' => 'imageid',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'imageid',
+							'enable' => true
+						],
+						'label' => 'Image ID',
+						'hidden' => false,
+						'fillable' => false,
+						'type' => 'integer',
+						'unique' => true,
+						'unsigned' => true,
+						'length' => 16,
+						'comment' => 'Image Id'
+					],
+					'filename' => [
+						'filterable' => [
+							'name' => 'filename',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'filename',
+							'enable' => true
+						],
+						'label' => 'The filename',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'string',
+						'comment' => 'The Text'
+					],
+					'title' => [
+						'filterable' => [
+							'name' => 'title',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'title',
+							'enable' => true
+						],
+						'label' => 'Title',
+						'hidden' => false,
+						'fillable' => true,
+						'type' => 'string',
+						'nullable' => true,
+						'comment' => 'Image Title'
+					],
+					'material' => [
+						'filterable' => [
+							'name' => 'material',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'material',
+							'enable' => true
+						],
+						'label' => 'Material',
+						'hidden' => false,
+						'fillable' => true,
+						'nullable' => true,
+						'type' => 'string',
+						'comment' => 'The material'
+					],
+					'chain' => [
+						'filterable' => [
+							'name' => 'chain',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'chain',
+							'enable' => true
+						],
+						'label' => 'Chain',
+						'hidden' => false,
+						'fillable' => true,
+						'nullable' => true,
+						'type' => 'string',
+						'comment' => 'The chain'
+					],
+					'font' => [
+						'filterable' => [
+							'name' => 'font',
+							'enable' => true
+						],
+						'sortable' => [
+							'name' => 'font',
+							'enable' => true
+						],
+						'label' => 'Font',
+						'hidden' => false,
+						'fillable' => true,
+						'nullable' => true,
+						'type' => 'string',
+						'comment' => 'The font used'
+					],
+					'tags' => [
+						'filterable' => [
+							'name' => 'tags',
+							'enable' => true
+						],
+						'label' => 'Tags',
+						'hidden' => false,
+						'fillable' => true,
+						'nullable' => true,
+						'type' => 'text',
+						'comment' => 'Tags'
+					],
+				]
+			]
+		],
 		'custom_orders' => [
 			'enable' => true,
 			'model' => Zivsluck\Entity\__FRAMEWORK__\Order::class,
