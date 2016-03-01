@@ -21,7 +21,7 @@ if(empty($checkout))
 		{!! view(zbase_view_file_contents('customize.confirm')) !!}
 		{!! view(zbase_view_file_contents('customize.final')) !!}
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-6" style="position:fixed;right:0px;background: white; padding:5px;">
 
 		{!! view(zbase_view_file_contents('customize.addonControl')) !!}
 		<a id="preview"></a>

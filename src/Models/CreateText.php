@@ -331,10 +331,17 @@ class CreateText
 			{
 				if(!empty($addon))
 				{
+//					$addon = explode('-', $addon);
+//					$addonName = !empty($addon[0]) ? $addon[0] : false;
+//					$addonEnabled = zbase_config_get('zivsluck.addons.' . $addonName . '.enable');
+//					$addonFile = zivsluck()->path() . 'resources/assets/img/addons/' . zbase_config_get('zivsluck.addons.' . $addonName . '.file');
+//					$addonPosition = !empty($addon[1]) ? explode(',', $addon[1]) : false;
+//					$addonSize = !empty($addon[2]) ? explode('x', $addon[2]) : false;
+//					$addonRotate = intval(!empty($addon[3]) ? $addon[3] : false);
 					$addon = explode('-', $addon);
 					$addonName = !empty($addon[0]) ? $addon[0] : false;
-					$addonEnabled = zbase_config_get('zivsluck.addons.' . $addonName . '.enable');
-					$addonFile = zivsluck()->path() . 'resources/assets/img/addons/' . zbase_config_get('zivsluck.addons.' . $addonName . '.file');
+					$addonEnabled = true;//zbase_config_get('zivsluck.addons.' . $addonName . '.enable');
+					$addonFile = zivsluck()->path() . 'resources/assets/img/addons/' . $addonName .'.png';
 					$addonPosition = !empty($addon[1]) ? explode(',', $addon[1]) : false;
 					$addonSize = !empty($addon[2]) ? explode('x', $addon[2]) : false;
 					$addonRotate = intval(!empty($addon[3]) ? $addon[3] : false);
