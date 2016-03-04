@@ -58,6 +58,8 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	#addOnControlsPosition{
 		position: absolute;
 		height: 0px;
+		left: 150px;
+		top: -25px;
 	}
 	#addOnControls .controlLabel,
 	#addOnControlsPosition .controlLabel{
@@ -74,6 +76,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	#addOnControls{
 		position: absolute;
 		height:0px;
+		top:20px;
 	}
 	#addOnControls .controls{
 		position: relative;
@@ -128,6 +131,9 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		position: absolute;
 		top: 0;
 		left: 1px;
+	}
+	#addOnControls .controls .checkbox{
+		display: none;
 	}
 	@media (min-width: 320px) and (max-width: 568px) {
 		#addOnControlsPosition{
