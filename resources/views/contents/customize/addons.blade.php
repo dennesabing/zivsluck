@@ -13,7 +13,6 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	<div class="row">
 		<div id="addonsWrapper" class="col-md-12">
 			<h3>Icons</h3>
-			<div class="col-md-12">
 				<?php
 				for ($ic = 1; $ic <= 103; $ic++)
 				{
@@ -29,16 +28,14 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 						$addonHeight = 32;
 						$addonWidth = 32;
 						?>
-						<div class="addon col-md-1 col-xs-3 thumbnail addon-thumbnail addon-thumbnail-<?php echo $name ?>" style="cursor:pointer;">
+						<div class="addon col-md-2 col-xs-4 thumbnail addon-thumbnail addon-thumbnail-<?php echo $name ?>" style="cursor:pointer;">
 							<img data-rotate="0" style="width:<?php echo $addonWidth ?>px;height:<?php echo $addonHeight ?>px;" data-width="<?php echo $addonWidth ?>" data-height="<?php echo $addonHeight ?>" data-sameonly="0" data-allowed="1" class="draggable enable addon-<?php echo $name ?>" data-name="<?php echo $name ?>" src="/zbase/assets/zivsluck/img/addons/<?php echo $file ?>" alt="<?php echo $label ?>">
 						</div>
 						<?php
 					}
 				}
 				?>
-			</div>
 			<h3>Hemlines</h3>
-			<div class="col-md-12">
 				<?php
 				for ($ic = 1; $ic <= 54; $ic++)
 				{
@@ -54,14 +51,13 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 						$addonHeight = 32;
 						$addonWidth = 128;
 						?>
-						<div class="addon col-md-2 col-xs-3 thumbnail addon-thumbnail addon-thumbnail-<?php echo $name ?>" style="cursor:pointer;">
+						<div class="addon col-md-3 col-xs-6 thumbnail addon-thumbnail addon-thumbnail-<?php echo $name ?>" style="cursor:pointer;">
 							<img data-rotate="0" style="width:<?php echo $addonWidth ?>px;height:<?php echo $addonHeight ?>px;" data-width="<?php echo $addonWidth ?>" data-height="<?php echo $addonHeight ?>" data-sameonly="0" data-allowed="1" class="draggable enable addon-<?php echo $name ?>" data-name="<?php echo $name ?>" src="/zbase/assets/zivsluck/img/addons/<?php echo $file ?>" alt="<?php echo $label ?>">
 						</div>
 						<?php
 					}
 				}
 				?>
-			</div>
 <!--			<h3>Frames</h3>
 			<div class="col-md-12">
 				<?php
@@ -131,7 +127,10 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	jQuery('#addonsForm').show();
 	jQuery('#btnAddons').hide();
 	jQuery('#step').val(2);
+	jQuery('#customizedImage').addClass('addonPreview');
+	jQuery('body').addClass('addonSection');
 	jQuery('#droppableWindow').css('border', '1px solid black');
+	jQuery('.draggable.enable').unbind('taphold');
 	var htmlButtons = '<button onclick="zivsluck_addOnsBack();" id="btnAddOnsBack" class="btn btn-default">Back</button>';
 <?php if(!empty($checkout)): ?>
 		htmlButtons += '<br /><br /><br /><button onclick="zivsluck_shippingProcess();" id="btnCheckoutNecklace" class="btn btn-success btn-next">Checkout this Necklace</button>';
@@ -152,6 +151,8 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	jQuery('#droppableWindow').css('border', '0px solid black');
 	zivsluck_load();
 	scroll(0, 0);
+	jQuery('#customizedImage').removeClass('addonPreview');
+	jQuery('body').removeClass('addonSection');
 	}
 	function zivsluck_addOnsInit()
 	{
@@ -169,6 +170,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	$("#droppableWindow").droppable({
 	accept: ".draggable.enable",
 			drop: function (event, ui) {
+				jQuery(ui.helper).removeClass('addOnDragging');
 			jQuery('#droppableWindow').css('backgroundColor', 'rgba(255,255,255,0)');
 			var newPosX = ui.offset.left - $(this).offset().left;
 			var newPosY = ui.offset.top - $(this).offset().top;
@@ -220,6 +222,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	accept: ".draggable",
 			drop: function (event, ui) {
 			ui.helper.remove();
+			jQuery(ui.helper).removeClass('addOnDragging');
 			jQuery('#droppableWindow').css('backgroundColor', 'rgba(255,255,255,0)');
 			if (jQuery('.draggable.selected').length < 1)
 			{
@@ -237,6 +240,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 			revert: "invalid",
 			drag: function (event, ui) {
 			jQuery('#droppableWindow').css('backgroundColor', 'rgba(255,255,255,0.6)');
+				jQuery(ui.helper).addClass('addOnDragging');
 			}
 	});
 	var htmlButtons = '<button onclick="zivsluck_addOns();" id="btnAddons" class="btn btn-success btn-next">Next, Addons</button>';

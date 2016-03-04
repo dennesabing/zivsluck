@@ -116,6 +116,7 @@ $dataShipping = [
 
 		function zivsluck_shippingProcess()
 		{
+			jQuery('#customizedImage').removeClass('addonPreview');
 			jQuery('#shippingForm').show();
 			jQuery('#customizeForm').hide();
 			jQuery('#showCustom').hide();
@@ -156,6 +157,7 @@ $dataShipping = [
 				jQuery('#showCustom').show();
 				jQuery('#addonsForm').hide();
 				jQuery('#step').val(1);
+				jQuery('body').removeClass('addonSection');
 				zivsluck_load();
 				addon = '';
 			});

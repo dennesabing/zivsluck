@@ -6,7 +6,7 @@ if(empty($checkout))
 	zbase_alert('warning', 'Checkout is currently disabled. Still, you can create customized necklace.');
 }
 ?>
-<div class="row" style="border-bottom: 2px solid #EBEBEB;padding-bottom:20px;">
+<div class="row" style="border-bottom: 2px solid #EBEBEB;padding-bottom:20px;" id="customizeFormWrapper">
 	<div class="col-md-6">
 
 		{!! view(zbase_view_file_contents('customize.customize')) !!}
@@ -21,7 +21,7 @@ if(empty($checkout))
 		{!! view(zbase_view_file_contents('customize.confirm')) !!}
 		{!! view(zbase_view_file_contents('customize.final')) !!}
 	</div>
-	<div class="col-md-6" style="position:fixed;right:0px;background: white; padding:5px;">
+	<div class="col-md-6 customizedPreview">
 
 		{!! view(zbase_view_file_contents('customize.addonControl')) !!}
 		<a id="preview"></a>
@@ -68,13 +68,87 @@ if(empty($checkout))
 	}
 	#addonsForm{
 		margin-bottom: 20px;
+		padding:30px;
 	}
 
-	@media (min-width: 320px) and (max-width: 550px) {
+	.noScrollX{
+		overflow-x: hidden !important;
+	}
+	.scrollX{
+		overflow: scroll !important;
+	}
+
+	@media (min-width: 320px) and (max-width: 568px) {
 		#customizedImage{
 			padding-left:0px;
 		}
+		.addOnDragging{
+			margin-top:-30px;
+		}
+		.draggable.cloned{
+			/*margin-top:-30px;*/
+		}
+		#customizedImage.addonPreview{
+			position: fixed;
+			top:250px;
+			background: white;
+			padding: 15px;
+			padding-top:50px !important;
+			left:0px;
+			border-top: 1px solid black;
+		}
+		#btnCheckoutNecklace{
+			position: fixed;
+			/*top: 365px;*/
+			z-index: 99999;
+			left: 130px;
+			bottom:5px;
+		}
+		#btnAddOnsBack
+		{
+			position: fixed;
+			/*top: 365px;*/
+			left: 15px;
+			bottom:5px;
+		}
+		body.addonSection .headerContainer{
+			display: none;
+		}
+		body.addonSection #submitButtons{
+			background: white;
+			height: 40px;
+			position: fixed;
+			bottom: 0px;
+			width: 100%;
+			left: 0px;
+			padding:0px;
+		}
+		#addonsWrapper
+		{
+			position: relative;
+			height: 0px;
+			margin-bottom: 250px;
+		}
+		#addonsForm
+		{
+			margin-bottom: 200px;
+		}
 	}
+	@media (min-width: 1000px) {
+		.customizedPreview{
+			position: fixed;
+			right: 0px;
+			background: white;
+			padding: 5px;
+			height: 750px;
+			overflow-x: scroll;
+		}
+	}
+
+	@media (min-device-width: 320px) and (max-device-width: 568px) {
+
+	}
+
 </style>
 <script type="text/javascript">
 	var zivsluckFonts = <?php echo json_encode(zbase_config_get('zivsluck.fontmaps')); ?>;
@@ -217,7 +291,7 @@ if(empty($checkout))
 			data = {chain: chain, chainLength: chainLength};
 		}
 		$.ajax({
-			type: '<?php echo env('ZIVSLUCK_FORM_METHOD','post')?>',
+			type: '<?php echo env('ZIVSLUCK_FORM_METHOD', 'post') ?>',
 			url: '<?php echo zbase_url_from_route('create') ?>/' + text + '/' + font + '/' + material,
 			data: data,
 			beforeSend: function () {
@@ -247,9 +321,9 @@ if(empty($checkout))
 				{
 <?php if(!empty($checkout)): ?>
 						var htmlButtons = '<div id="orderConfirmationWrapper">\n\
-									<div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I agree and I understand the Terms and Conditions.</label>\n\
-									<div class="checkbox"><label><input type="checkbox" required="required" id="order_checked" name="order_checked" value="1" />I checked and confirmed the details of my order are correct.</label>\n\
-							</div>';
+																		<div class="checkbox"><label><input type="checkbox" required="required" id="agreement" name="agreement" value="1" />I agree and I understand the Terms and Conditions.</label>\n\
+																		<div class="checkbox"><label><input type="checkbox" required="required" id="order_checked" name="order_checked" value="1" />I checked and confirmed the details of my order are correct.</label>\n\
+																</div>';
 						htmlButtons += '<br /><button onclick="zivsluck_confirmOrderCancel();" id="btnConfirmOrderCancel" class="btn btn-danger">Cancel Order</button>';
 						htmlButtons += '&nbsp; &nbsp;<button onclick="zivsluck_confirmOrder();" id="btnConfirmOrder" class="btn btn-success btn-next">Yes, I want to order</button></div>';
 						jQuery('#submitButtons').html(htmlButtons);

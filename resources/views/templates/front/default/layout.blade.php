@@ -44,7 +44,7 @@ ob_start('zbase_remove_whitespaces');
 	</head>
 	<body class="{{ implode(' ',zbase_view_placeholder('body_class')) }}">
 		<div class="container-fluid">
-			<div class="row" style="padding-bottom:20px;">
+			<div class="row headerContainer" style="padding-bottom:20px;">
 				<div class="col-md-6">
 					<a href="/" title="ZivsLuck" class="logo">ZivsLuck</a>
 				</div>

@@ -12,7 +12,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 					<button class="btn btn-default" type="button"><i class="glyphicon glyphicon-minus"></i></button>
 				</div>
 			</div>
-			<div class="input-group col-md-4 spinner spinner-addon spinner-addon-width">
+			<div class="input-group col-md-4 spinner spinner-addon spinner-addon-width" style="display: none;">
 				<input type="text" class="form-control" id="spinner-addon-width-value" name="spinner-addon-width-value" disabled value="32" readonly>
 				<div class="input-group-btn-vertical">
 					<button class="btn btn-default" type="button"><i class="glyphicon glyphicon-plus"></i></button>
@@ -129,148 +129,198 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		top: 0;
 		left: 1px;
 	}
-	@media (min-width: 320px) and (max-width: 800px) {
-		#addOnControls .controlLabel,
-		#addOnControlsPosition .controlLabel{
-			display: block;
-			position: relative;
-			top: -190px;
-			background: black;
-			color: white;
-			text-align: center;
-			font-size: 11px;
-		}
-		#addOnControls .controlLabel{
-			position: relative;
-			top: -190px;
-		}
-		#addOnControls{
-			position: fixed;
-			z-index: 99999;
-			height:0px;
-			bottom: 0px;
-			cursor: grab;
-		}
-		#addOnControls .controls {
-			border: 1px solid black;
-			padding: 0px;
-			margin: 0px;
-			width: 125px;
-			height: 170px;
-			top: -190px;
-			background: rgba(255,255,255,0.5);
-			/*background: yellow;*/
-		}
-		.spinner-addon {
-		}
-		#addOnControls .checkbox label {
-			position: relative;
-			left: 0px;
-			top: 0px;
-			content: none;
-		}
-		.spinner-addon input.form-control {
-			top: 72px;
-			text-align: center;
-			width: 40px;
-			padding: 6px 10px;
-		}
-		.spinner-addon.input-group[class*=col-]{
-			width:50px;
-		}
-		.spinner-addon.spinner-addon-width{
-			position: absolute;
-			top: 0px;
-			left: 15px
-		}
-		.spinner-addon.spinner-addon-height{
-			position: absolute;
-			left: 65px;
-			top: 0px;
-		}
-		.spinner-addon .input-group-btn-vertical {
-			display: block;
-			z-index: 999;
-			top: 0px;
-		}
-		.spinner-addon .input-group-btn-vertical > .btn {
-			padding: 20px;
-			border-radius: 5px;
-		}
-		.spinner-addon .input-group-btn-vertical > .btn:first-child {
-			border-bottom-right-radius: 0px;
-			border-bottom-left-radius: 0px;
-		}
-		.spinner-addon .input-group-btn-vertical > .btn:last-child {
-			top:30px;
-			border-top-right-radius: 0px;
-			border-top-left-radius: 0px;
-		}
-		.spinner-addon .input-group-btn-vertical i{
-			top: 12px;
-			left: 12px;
-		}
-
+	@media (min-width: 320px) and (max-width: 568px) {
 		#addOnControlsPosition{
 			position: fixed;
 			height: 0px;
-			z-index:9999;
-			right:0px;
-			bottom:0px;
+			top: 250px;
+			z-index: 99;
+			left: 150px;
 		}
-		#addOnControlsPosition .controlLabel{
-			position: relative;
-			top: -160px;
-			left: -20px;
-
+		#addOnControls {
+			position: fixed;
+			height: 0px;
+			top: 310px;
+			z-index: 99;
 		}
-		#addOnControlsPosition .input-group-btn-vertical{
-			position: relative;
+		#addOnControls .controls
+		{
 			padding: 0px;
 			margin: 0px;
-			height: 140px;
-			left: -5px;
-			width: 120px;
-			top: -12px;
+			height: 35px;
+			background: none;
 		}
-		#addOnControlsPosition .positionControls{
-			border: 1px solid black;
-			position: relative;
-			top: -160px;
-			left: -20px;
-			width: 121px;
-			background: rgba(255,255,255,0.5);
-			height: 140px;
+		#addOnControls .controls input
+		{
+			display: none;
 		}
-		#addOnControlsPosition .btn-xs{
-			padding: 10px;
-			width: 40px;
+		#addOnControls .controls .btn {
+			padding: 20px;
+			border-radius: 5px;
+			/* padding: 15px; */
+			display: block;
+			/* text-align: center; */
+			border-radius: 5px;
+			width: 35px;
+			height: 35px;
+			float: left;
 		}
-		#addonPositionLeft{
-			position: relative;
-			top: 50px !important;
-			left: -10px !important;
+		#addOnControls .controls .btn i{
+			top: 12px;
+			left: 12px;
 		}
-		#addonPositionRight{
-			position: relative;
-			top: 50px;
-			left: 35px;
+		#addOnControls .controls .checkbox{
+			display: none;
 		}
-		#addonPositionUp{
-			top: -35px;
-			position: relative;
-			left: 34px;
+		#addOnControls .controls .btn:last-child{
+			margin-top:0px;
 		}
-		#addonPositionDown{
-			top: 55px;
-			position: relative;
-			left: -9px;
+		#addOnControls .input-group.spinner{
+			width:105px;
 		}
-		#addonPositionRotate{
-			position: relative;
-			top: -30px;
-			left: 35px;
-		}
+	}
+	@media (min-width: 320px) and (max-width: 800px) {
+		/*		#addOnControls .controlLabel,
+				#addOnControlsPosition .controlLabel{
+					display: block;
+					position: relative;
+					top: -190px;
+					background: black;
+					color: white;
+					text-align: center;
+					font-size: 11px;
+				}
+				#addOnControls .controlLabel{
+					position: relative;
+					top: -190px;
+				}
+				#addOnControls{
+					position: fixed;
+					z-index: 99999;
+					height:0px;
+					bottom: 0px;
+					cursor: grab;
+				}
+				#addOnControls .controls {
+					border: 1px solid black;
+					padding: 0px;
+					margin: 0px;
+					width: 125px;
+					height: 170px;
+					top: -190px;
+					background: rgba(255,255,255,0.5);
+					background: yellow;
+				}
+				.spinner-addon {
+				}
+				#addOnControls .checkbox label {
+					position: relative;
+					left: 0px;
+					top: 0px;
+					content: none;
+				}
+				.spinner-addon input.form-control {
+					top: 72px;
+					text-align: center;
+					width: 40px;
+					padding: 6px 10px;
+				}
+				.spinner-addon.input-group[class*=col-]{
+					width:50px;
+				}
+				.spinner-addon.spinner-addon-width{
+					position: absolute;
+					top: 0px;
+					left: 15px
+				}
+				.spinner-addon.spinner-addon-height{
+					position: absolute;
+					left: 65px;
+					top: 0px;
+				}
+				.spinner-addon .input-group-btn-vertical {
+					display: block;
+					z-index: 999;
+					top: 0px;
+				}
+				.spinner-addon .input-group-btn-vertical > .btn {
+					padding: 20px;
+					border-radius: 5px;
+				}
+				.spinner-addon .input-group-btn-vertical > .btn:first-child {
+					border-bottom-right-radius: 0px;
+					border-bottom-left-radius: 0px;
+				}
+				.spinner-addon .input-group-btn-vertical > .btn:last-child {
+					top:30px;
+					border-top-right-radius: 0px;
+					border-top-left-radius: 0px;
+				}
+				.spinner-addon .input-group-btn-vertical i{
+					top: 12px;
+					left: 12px;
+				}
+
+				#addOnControlsPosition{
+					position: fixed;
+					height: 0px;
+					z-index:9999;
+					right:0px;
+					bottom:0px;
+				}
+				#addOnControlsPosition .controlLabel{
+					position: relative;
+					top: -160px;
+					left: -20px;
+
+				}
+				#addOnControlsPosition .input-group-btn-vertical{
+					position: relative;
+					padding: 0px;
+					margin: 0px;
+					height: 140px;
+					left: -5px;
+					width: 120px;
+					top: -12px;
+				}
+				#addOnControlsPosition .positionControls{
+					border: 1px solid black;
+					position: relative;
+					top: -160px;
+					left: -20px;
+					width: 121px;
+					background: rgba(255,255,255,0.5);
+					height: 140px;
+				}
+				#addOnControlsPosition .btn-xs{
+					padding: 10px;
+					width: 40px;
+				}
+				#addonPositionLeft{
+					position: relative;
+					top: 50px !important;
+					left: -10px !important;
+				}
+				#addonPositionRight{
+					position: relative;
+					top: 50px;
+					left: 35px;
+				}
+				#addonPositionUp{
+					top: -35px;
+					position: relative;
+					left: 34px;
+				}
+				#addonPositionDown{
+					top: 55px;
+					position: relative;
+					left: -9px;
+				}
+				#addonPositionRotate{
+					position: relative;
+					top: -30px;
+					left: 35px;
+				}*/
 
 	}
 </style>
@@ -280,7 +330,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	function zivsluck_flip_h()
 	{
 		var addon = jQuery('.addon-controlable');
-		if(addon.hasClass('flipped'))
+		if (addon.hasClass('flipped'))
 		{
 			addon.removeClass('flipped');
 		} else {
@@ -342,12 +392,12 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	function zivsluck_addOn_rotate()
 	{
 		var deg = parseInt(jQuery('.addon-controlable').attr('data-rotate'), 10) + 90;
-		if(deg === 360)
+		if (deg === 360)
 		{
 			deg = 0;
 		}
-		var degValue = 'rotate('+deg+'deg)';
-		jQuery('.addon-controlable').css({'-moz-transform':degValue,'transform': degValue,'-webkit-transform': degValue,'-ms-transform' : degValue}).attr('data-rotate', deg);
+		var degValue = 'rotate(' + deg + 'deg)';
+		jQuery('.addon-controlable').css({'-moz-transform': degValue, 'transform': degValue, '-webkit-transform': degValue, '-ms-transform': degValue}).attr('data-rotate', deg);
 	}
 	jQuery(document).ready(function () {
 		$('#addOnControls').draggable();
