@@ -16,7 +16,7 @@
 return [
 	'zivsluck' => [
 		'promotion' => [
-			'enable' => env('ZIVSLUCK_PROMOTION', false),
+			'enable' => false,
 			'discount' => 100
 		],
 		'price' => [
@@ -228,7 +228,7 @@ return [
 				'enable' => true
 			],
 			'url' => '/promo',
-			'enable' => true
+			'enable' => false
 		],
 		'site/addons/list' => [
 			'controller' => [

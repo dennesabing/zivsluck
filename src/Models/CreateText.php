@@ -242,6 +242,7 @@ class CreateText
 		// http://stackoverflow.com/questions/26288347/php-gd-complex-stacking-multiple-layers
 		// $clipart = imagecreatefrompng(zivsluck()->path() . 'resources/assets/img/createBaseImage.png');
 		$bgTexture = imagecreatefrompng($textureFile);
+		$noBg = !empty(zbase_cookie('nobg')) ? true : false;
 		$logo = imagecreatefrompng($logo);
 		$white = imagecolorallocate($bgTexture, 255, 255, 255);
 		if($dealerCopy)
@@ -250,6 +251,10 @@ class CreateText
 			$bgTexture = imagecreatetruecolor($boxWidth - ($borderWidth * 2), $boxHeight - ($borderWidth * 2));
 			// Background Color
 			$white = imagecolorallocate($bgTexture, 255, 255, 255);
+		}
+		if(!empty($noBg))
+		{
+			$bgTexture = imagecreatetruecolor($boxWidth, $boxHeight);
 		}
 		/**
 		 * Create text on a white background
@@ -340,8 +345,8 @@ class CreateText
 //					$addonRotate = intval(!empty($addon[3]) ? $addon[3] : false);
 					$addon = explode('-', $addon);
 					$addonName = !empty($addon[0]) ? $addon[0] : false;
-					$addonEnabled = true;//zbase_config_get('zivsluck.addons.' . $addonName . '.enable');
-					$addonFile = zivsluck()->path() . 'resources/assets/img/addons/' . $addonName .'.png';
+					$addonEnabled = true; //zbase_config_get('zivsluck.addons.' . $addonName . '.enable');
+					$addonFile = zivsluck()->path() . 'resources/assets/img/addons/' . $addonName . '.png';
 					$addonPosition = !empty($addon[1]) ? explode(',', $addon[1]) : false;
 					$addonSize = !empty($addon[2]) ? explode('x', $addon[2]) : false;
 					$addonRotate = intval(!empty($addon[3]) ? $addon[3] : false);
@@ -435,7 +440,9 @@ class CreateText
 							$total += $addonPrice;
 							$subTotal += $addonPrice;
 						}
-					} else {
+					}
+					else
+					{
 						$totalAddon = $totalCharacters - $maxLetter;
 						$addonPrice = $totalAddon * 20;
 					}
@@ -480,7 +487,7 @@ class CreateText
 				if(!empty($includedAddons))
 				{
 					imagettftext($img, 8, 0, 25, 300, $textColorBlack, $verdanaFont, 'Included Addons:');
-					imagettftext($img, 8, 0, 25, 320, $textColorBlack, $verdanaFont, wordwrap(implode(', ', $includedAddons),30));
+					imagettftext($img, 8, 0, 25, 320, $textColorBlack, $verdanaFont, wordwrap(implode(', ', $includedAddons), 30));
 				}
 				if(!empty($customerNote))
 				{
@@ -647,7 +654,7 @@ class CreateText
 				//if($orderEntity->shippingAddress() == $shippingAddress && zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()))
 				//if(zbase_date_before(zbase_date_instance($orderEntity->first()->created_at)->addHour(24), zbase_date_now()))
 				//{
-					return $orderEntity;
+				return $orderEntity;
 				//}
 			}
 		}

@@ -31,5 +31,5 @@ function zivsluck_tag()
  */
 function zivsluck_promotion()
 {
-	return zbase_config_get('zivsluck.promotion.enable', false);
+	return env('ZIVSLUCK_PROMOTION', zbase_config_get('zivsluck.promotion.enable', false));
 }

@@ -21,6 +21,10 @@ class CreateController extends Controller
 
 	public function index()
 	{
+		if(!empty($_GET['nobg']))
+		{
+			zbase_cookie_make('nobg', 1);
+		}
 		return $this->view(zbase_view_file('create.customize'));
 	}
 
