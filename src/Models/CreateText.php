@@ -203,7 +203,7 @@ class CreateText
 		 */
 		$text = $this->getText();
 		$text = trim(strip_tags(html_entity_decode($text)));
-		$text = trim(preg_replace('/ss+/', ' ', $text));
+		// $text = trim(preg_replace('/ss+/', ' ', $text));
 		$text = ( strlen($text) > $chars ) ? substr($text, 0, $chars) . '..' : $text;
 
 		if(!empty($fontDetails['enable']))
