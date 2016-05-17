@@ -46,6 +46,7 @@ class CreateText
 	 * @var \Zivsluck\Entity\Order
 	 */
 	protected $orderData = null;
+	protected $displayPrice = false;
 
 	/**
 	 * The Image
@@ -505,9 +506,12 @@ class CreateText
 				imagettftext($img, 9, 0, 15, 275, $textColorBlack, $verdanaFont, 'Chain Length: ' . $chainLength . '"');
 				imagettftext($img, 9, 0, 15, 290, $textColorBlack, $verdanaFont, 'Chain: ' . strtoupper($chain));
 
-				imagettftext($img, 9, 0, 15, 430, $textColorBlack, $verdanaFont, ucfirst($material) . ' Price: Php ' . number_format($price, 2));
-				imagettftext($img, 9, 0, 15, 445, $textColorBlack, $verdanaFont, 'Characters: Php ' . number_format($letterPrice, 2));
-				imagettftext($img, 9, 0, 15, 460, $textColorBlack, $verdanaFont, 'Symbols: Php ' . number_format($addonPrice, 2));
+				if(!empty($this->displayPrice))
+				{
+					imagettftext($img, 9, 0, 15, 430, $textColorBlack, $verdanaFont, ucfirst($material) . ' Price: Php ' . number_format($price, 2));
+					imagettftext($img, 9, 0, 15, 445, $textColorBlack, $verdanaFont, 'Characters: Php ' . number_format($letterPrice, 2));
+					imagettftext($img, 9, 0, 15, 460, $textColorBlack, $verdanaFont, 'Symbols: Php ' . number_format($addonPrice, 2));
+				}
 				if($hasShipping)
 				{
 					imagettftext($img, 9, 0, 15, 475, $textColorBlack, $verdanaFont, 'Shipping: Php ' . number_format($shippingFee, 2));
@@ -541,7 +545,10 @@ class CreateText
 					}
 					imagettftext($img, 8, 0, 15, 760, $textColorBlack, $verdanaFont, 'Date: ' . date('F d, Y h:i A'));
 				}
-				imagettftext($img, 18, 0, 15, 540, $textColorBlack, $verdanaFont, 'Total: Php ' . number_format($total, 2));
+				if(!empty($this->displayPrice))
+				{
+					imagettftext($img, 18, 0, 15, 540, $textColorBlack, $verdanaFont, 'Total: Php ' . number_format($total, 2));
+				}
 				if(!empty($statusPaid))
 				{
 					imagettftext($img, 9, 0, 15, 555, $textColorBlack, $verdanaFont, 'PAID ' . number_format($paymentAmount, 2) . ' via ' . $paymentCenterName . ' (' . $orderData->paid_date_at->format('m/d/Y') . ')');

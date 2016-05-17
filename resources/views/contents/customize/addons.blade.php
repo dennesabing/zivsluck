@@ -1,5 +1,5 @@
 <?php
-$checkout = zbase_config_get('zivsluck.checkout.enable', false);
+$checkout = false;//zbase_config_get('zivsluck.checkout.enable', false);
 ?>
 <div id="addonsForm" style="display: none;">
 	<h2>Addons</h2>
@@ -14,7 +14,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		<div id="addonsWrapper" class="col-md-12">
 			<h3>Icons</h3>
 				<?php
-				for ($ic = 1; $ic <= 103; $ic++)
+				for ($ic = 1; $ic <= 105; $ic++)
 				{
 					$folder = zbase_public_path() . '/zbase/assets/zivsluck/img/addons/';
 					$file = 'icon' . $ic . '.png';

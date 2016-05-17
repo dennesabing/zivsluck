@@ -35,6 +35,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 				<button class="btn btn-default btn-xs" id="addonPositionUp" type="button"><i class="glyphicon glyphicon-chevron-up"></i></button>
 				<button class="btn btn-default btn-xs" id="addonPositionDown" type="button"><i class="glyphicon glyphicon-chevron-down"></i></button>
 				<button class="btn btn-default btn-xs" id="addonPositionRotate" type="button"><i class="glyphicon glyphicon-repeat"></i></button>
+				<button class="btn btn-default btn-xs" id="addonPositionRotateReverse" type="button"><i class="glyphicon glyphicon-repeat flipped"></i></button>
 				<!--<button class="btn btn-default btn-xs" id="addonPositionFlipH" type="button"><i class="glyphicon glyphicon-object-align-horizontal"></i></button>-->
 				<!--<button class="btn btn-default btn-xs" id="addonPositionFlipV" type="button"><i class="glyphicon glyphicon-object-align-vertical"></i></button>-->
 			</div>
@@ -69,7 +70,7 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		position: relative;
 		z-index: 99999;
 		top: 10px;
-		left: 20px;
+		left: -10px;
 		padding: 10px;
 		background: rgba(255,255,255,0.4);
 	}
@@ -397,11 +398,22 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 	}
 	function zivsluck_addOn_rotate()
 	{
-		var deg = parseInt(jQuery('.addon-controlable').attr('data-rotate'), 10) + 90;
+		var deg = parseInt(jQuery('.addon-controlable').attr('data-rotate'), 10) + 2;
 		if (deg === 360)
 		{
 			deg = 0;
 		}
+		var degValue = 'rotate(' + deg + 'deg)';
+		jQuery('.addon-controlable').css({'-moz-transform': degValue, 'transform': degValue, '-webkit-transform': degValue, '-ms-transform': degValue}).attr('data-rotate', deg);
+	}
+	function zivsluck_addOn_rotate_reverse()
+	{
+		var deg = parseInt(jQuery('.addon-controlable').attr('data-rotate'), 10);
+		if (deg < 0)
+		{
+			deg = 360;
+		}
+		deg = deg - 2;
 		var degValue = 'rotate(' + deg + 'deg)';
 		jQuery('.addon-controlable').css({'-moz-transform': degValue, 'transform': degValue, '-webkit-transform': degValue, '-ms-transform': degValue}).attr('data-rotate', deg);
 	}
@@ -414,6 +426,9 @@ $checkout = zbase_config_get('zivsluck.checkout.enable', false);
 		});
 		jQuery('#addonPositionRotate').click(function () {
 			zivsluck_addOn_rotate();
+		});
+		jQuery('#addonPositionRotateReverse').click(function () {
+			zivsluck_addOn_rotate_reverse();
 		});
 		jQuery('#addonPositionLeft').click(function () {
 			zivsluck_addOn_position_set('left');

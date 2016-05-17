@@ -1,5 +1,5 @@
 <?php
-ob_start('zbase_remove_whitespaces');
+ob_start('zbase_view_compile');
 ?>
 <!DOCTYPE html>
 <html lang="en" zbase-package="<?php echo zbase_view_template_package() ?>">

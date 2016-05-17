@@ -1,9 +1,9 @@
 <?php
 zbase_view_head_meta_add('_token', zbase_csrf_token());
-$checkout = zbase_config_get('zivsluck.checkout.enable', false);
+$checkout = false;//zbase_config_get('zivsluck.checkout.enable', false);
 if(empty($checkout))
 {
-	zbase_alert('warning', 'Checkout is currently disabled. Still, you can create customized necklace.');
+	// zbase_alert('warning', 'Checkout is currently disabled. Still, you can create customized necklace.');
 }
 ?>
 <div class="row" style="border-bottom: 2px solid #EBEBEB;padding-bottom:20px;" id="customizeFormWrapper">

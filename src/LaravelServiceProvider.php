@@ -1,7 +1,6 @@
 <?php
 
 namespace Zivsluck;
-date_default_timezone_set ('Asia/Manila');
 /**
  * Zbase ServiceProvider
  *
@@ -31,12 +30,6 @@ class LaravelServiceProvider extends \Illuminate\Support\ServiceProvider
 		$this->publishes([
 			__DIR__ . '/../resources/assets' => zbase_public_path(zbase_path_asset(zivsluck_tag())),
 				], 'public');
-
-		$this->publishes([
-			__DIR__ . '/../database/migrations' => base_path('database/migrations'),
-			__DIR__ . '/../database/seeds' => base_path('database/seeds'),
-			__DIR__ . '/../database/factories' => base_path('database/factories')
-				], 'migrations');
 		require __DIR__ . '/Http/Controllers/Laravel/routes.php';
 	}
 
