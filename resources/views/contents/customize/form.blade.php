@@ -262,6 +262,8 @@ if(empty($checkout))
 			var shippingFirstName = jQuery('#shipping_first_name');
 			var shippingLastName = jQuery('#shipping_last_name');
 			data = {
+				token: false,
+				forceResponse: 1,
 				shippingFirstName: shippingFirstName.val(),
 				shippingLastName: shippingLastName.val(),
 				shippingSame: zbase_get_checkbox_value('#shippingSame'),
@@ -288,9 +290,10 @@ if(empty($checkout))
 				addon: addon
 			};
 		} else {
-			data = {chain: chain, chainLength: chainLength};
+			data = {chain: chain, chainLength: chainLength, token: 0, forceResponse: 1};
 		}
 		$.ajax({
+			dataType: 'html',
 			type: '<?php echo env('ZIVSLUCK_FORM_METHOD', 'post') ?>',
 			url: '<?php echo zbase_url_from_route('create') ?>/' + text + '/' + font + '/' + material,
 			data: data,

@@ -128,6 +128,9 @@ return [
 		],
 	],
 	'view' => [
+		'cdn' => [
+			'enable' => true,
+		],
 		'plugins' => [],
 		'templates' => [
 			'front' => [

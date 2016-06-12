@@ -14,7 +14,7 @@ $checkout = false;//zbase_config_get('zivsluck.checkout.enable', false);
 		<div id="addonsWrapper" class="col-md-12">
 			<h3>Icons</h3>
 				<?php
-				for ($ic = 1; $ic <= 105; $ic++)
+				for ($ic = 1; $ic <= 106; $ic++)
 				{
 					$folder = zbase_public_path() . '/zbase/assets/zivsluck/img/addons/';
 					$file = 'icon' . $ic . '.png';
@@ -58,7 +58,7 @@ $checkout = false;//zbase_config_get('zivsluck.checkout.enable', false);
 					}
 				}
 				?>
-<!--			<h3>Frames</h3>
+			<h3>Frames</h3>
 			<div class="col-md-12">
 				<?php
 				for ($ic = 1; $ic <= 14; $ic++)
@@ -82,7 +82,7 @@ $checkout = false;//zbase_config_get('zivsluck.checkout.enable', false);
 					}
 				}
 				?>
-			</div>-->
+			</div>
 		</div>
 	</div>
 </div>

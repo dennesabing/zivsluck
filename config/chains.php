@@ -74,7 +74,7 @@ return [
 			],
 			'silver' => [
 				'fonts' => [
-					'not' => ['scriptina']
+//					'not' => ['scriptina']
 				],
 				'svc-1' => [
 					'name' => 'SVC-1',

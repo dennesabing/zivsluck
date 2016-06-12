@@ -1,5 +1,8 @@
 <?php
-ob_start('zbase_view_compile');
+zbase_view_plugin_load('jquery');
+zbase_view_plugin_load('bootstrap');
+zbase_view_plugin_load('zbase');
+//ob_start('zbase_view_compile');
 ?>
 <!DOCTYPE html>
 <html lang="en" zbase-package="<?php echo zbase_view_template_package() ?>">
